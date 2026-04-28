@@ -1,18 +1,25 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
 
 export function Topbar() {
   return (
-    <header className="flex items-center justify-between border-b bg-white px-6 py-4">
+    <header className="flex items-center justify-between gap-3 border-b bg-white px-4 py-3 sm:px-6">
       <button
-        className="flex items-center gap-2 rounded border px-3 py-2 text-sm"
+        className="flex w-full max-w-2xl items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-500"
         aria-label="Abrir busca"
         onClick={() => window.dispatchEvent(new CustomEvent('command-palette:toggle'))}
       >
-        <Search size={16} /> Buscar <span className="text-slate-400">Ctrl+K</span>
+        <Search size={16} />
+        <span className="hidden sm:inline">Buscar módulos, temas ou comandos...</span>
+        <span className="sm:hidden">Buscar...</span>
+        <span className="ml-auto hidden text-slate-400 md:inline">Ctrl+K</span>
       </button>
-      <div className="text-sm text-slate-500">Aluno ISP</div>
+
+      <button className="hidden rounded-lg border border-slate-200 p-2 text-slate-500 md:block" aria-label="Notificações">
+        <Bell size={16} />
+      </button>
+      <div className="hidden text-sm text-slate-500 md:block">Aluno ISP • Nível avançado</div>
     </header>
   );
 }
