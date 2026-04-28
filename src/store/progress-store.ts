@@ -5,8 +5,10 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 type ProgressState = {
   completedLessons: string[];
+  completedMissions: string[];
   hasHydrated: boolean;
   completeLesson: (lessonSlug: string) => void;
+  completeMission: (missionId: string) => void;
   setHydrated: (value: boolean) => void;
 };
 
@@ -43,24 +45,32 @@ export const useProgressStore = create<ProgressState>()(
   persist(
     (set) => ({
       completedLessons: [],
+      completedMissions: [],
       hasHydrated: false,
       completeLesson: (lessonSlug) =>
         set((state) => ({
           completedLessons: Array.from(new Set([...state.completedLessons, lessonSlug])),
+        })),
+      completeMission: (missionId) =>
+        set((state) => ({
+          completedMissions: Array.from(new Set([...state.completedMissions, missionId])),
         })),
       setHydrated: (value) => set({ hasHydrated: value }),
     }),
     {
       name: KEY,
       storage: createJSONStorage(() => safeLocalStorage),
-      partialize: (state) => ({ completedLessons: state.completedLessons }),
+      partialize: (state) => ({ completedLessons: state.completedLessons, completedMissions: state.completedMissions }),
       merge: (persistedState, currentState) => {
         const persisted = persistedState as Partial<ProgressState> | undefined;
         return {
           ...currentState,
           completedLessons: Array.isArray(persisted?.completedLessons)
-            ? persisted!.completedLessons.filter((item): item is string => typeof item === 'string')
+            ? persisted.completedLessons.filter((item): item is string => typeof item === 'string')
             : currentState.completedLessons,
+          completedMissions: Array.isArray(persisted?.completedMissions)
+            ? persisted.completedMissions.filter((item): item is string => typeof item === 'string')
+            : currentState.completedMissions,
         };
       },
       onRehydrateStorage: () => (state) => {

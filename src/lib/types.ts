@@ -18,6 +18,22 @@ export type Module = {
 
 export type LessonSection = { title: string; type: string; content: string; variant?: 'info' | 'alert' | 'default' };
 
+export type LessonQuickQuestion = {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  explanation: string;
+};
+
+export type LessonMission = {
+  title: string;
+  objective: string;
+  steps: string[];
+  suggestedCommands: string[];
+  checklist: string[];
+  expectedResult: string;
+};
+
 export type Lesson = {
   id: string;
   moduleId: string;
@@ -30,8 +46,8 @@ export type Lesson = {
   diagram: string;
   commands: string[];
   checklist: string[];
-  mission: string;
-  quickQuestion: string;
+  mission: LessonMission;
+  quickQuestion: LessonQuickQuestion;
   glossaryTerms: string[];
   sources: string[];
   previousLessonSlug?: string;
