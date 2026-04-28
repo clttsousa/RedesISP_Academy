@@ -1,3 +1,10 @@
+import { Card } from '@/components/ui/card';
+
 export function ContentSection({ title, content }: { title: string; content: string }) {
-  return <section className="space-y-2"><h3 className="text-lg font-semibold">{title}</h3><p className="text-slate-700">{content}</p></section>;
+  return (
+    <Card variant="content" className="space-y-2.5">
+      <h3 className="text-xl font-semibold text-textPrimary">{title}</h3>
+      <p className="text-[15px] leading-7 text-textSecondary">{content}</p>
+    </Card>
+  );
 }

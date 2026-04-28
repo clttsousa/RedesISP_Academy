@@ -34,10 +34,10 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
   };
 
   return (
-    <div className={`rounded-xl border p-4 ${isMissionCompleted ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-white'}`}>
+    <div className={`rounded-2xl border p-5 shadow-sm ${isMissionCompleted ? 'border-emerald-300 bg-emerald-50/80' : 'border-appBorder bg-white'}`}>
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <h4 className="font-semibold">{mission.title}</h4>
+          <h4 className="text-lg font-semibold">{mission.title}</h4>
           <p className={`text-sm ${isMissionCompleted ? 'text-emerald-700' : 'text-slate-600'}`}>
             {isMissionCompleted ? 'Missão concluída' : 'Missão pendente'}
           </p>
@@ -50,7 +50,7 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/40" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 shadow-lg">
+          <Dialog.Content className="fixed left-1/2 top-1/2 w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-appBorder bg-white p-6 shadow-2xl">
             <div className="flex items-start justify-between gap-3">
               <Dialog.Title className="text-lg font-semibold">{mission.title}</Dialog.Title>
               <Dialog.Close asChild>
@@ -103,7 +103,7 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
 
             <div className="mt-6 flex justify-end gap-2">
               <Dialog.Close asChild>
-                <Button className="bg-slate-600">Cancelar</Button>
+                <Button className="bg-slate-600 hover:bg-slate-700">Cancelar</Button>
               </Dialog.Close>
               {!isMissionCompleted ? <Button onClick={concludeMission}>Concluir missão</Button> : null}
             </div>
