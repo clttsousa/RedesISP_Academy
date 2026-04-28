@@ -1,0 +1,1626 @@
+# Redes ISP do Zero ao Backbone
+
+> Arquivo convertido do PDF organizado para Markdown. Use este arquivo como fonte principal para o Codex extrair módulos, aulas, glossário, comandos, checklists, labs e quizzes.
+
+## Observações para o Codex
+
+- Preservar conteúdo técnico, comandos, checklists, troubleshooting, glossário e fontes.
+- Transformar esta apostila em dados estruturados do projeto, sem usar lorem ipsum.
+- Quando encontrar diagramas descritos em texto, converter em componentes visuais no front-end.
+- Quando o texto estiver com quebras herdadas do PDF, reorganizar em parágrafos legíveis durante a importação para `src/data/*`.
+
+---
+
+<!-- Página 1 do PDF -->
+
+Redes ISP do Zero ao
+Backbone
+Versão revisada, didática e visual
+Trilha profissional para evoluir de Suporte Técnico para NOC, Redes, Backbone e
+Engenharia ISP
+
+Como esta versão foi atualizada
+
+O conteúdo técnico base foi preservado e recebeu uma camada didática adicional: cenários reais, visão por
+nível, perguntas rápidas, missões práticas, resumos de bolso, alertas operacionais, diagramas visuais e
+plano de imagens por módulo.
+
+O objetivo não é simplificar demais, mas tornar o estudo mais guiado, prático e interessante para quem
+trabalha em ISP.
+
+---
+
+<!-- Página 2 do PDF -->
+
+## Sumário da versão revisada
+
+- Como usar esta apostila
+- Jornada de evolução: Suporte → NOC → Backbone → Engenharia
+- Visão executiva e roteiro de estudo original preservado
+- Módulo 1 - Redes de computadores
+- Módulo 2 - Fundamentos de rede ISP
+- Módulo 3 - DNS
+- Módulo 4 - NAT
+- Módulo 5 - CGNAT
+- Módulo 6 - OSPF
+- Módulo 7 - BGP
+- Módulo 8 - MPLS
+- Módulo 9 - Monitoramento ISP
+
+---
+
+<!-- Página 3 do PDF -->
+
+## Fontes recomendadas por módulo
+
+- Changelog da versão didática
+
+---
+
+<!-- Página 4 do PDF -->
+
+## Plano visual consolidado
+
+---
+
+<!-- Página 5 do PDF -->
+
+## Como usar esta apostila
+
+Método de estudo recomendado
+
+1. Leia primeiro o cenário real do módulo.
+
+2. Tente responder à pergunta rápida antes de ler a explicação.
+
+3. Estude o conteúdo técnico base preservado.
+
+4. Use o diagrama para fixar o fluxo.
+
+5. Execute a missão prática ou simule mentalmente.
+
+6. Revise pelo resumo de bolso e pelo glossário.
+
+Visão O que observar
+
+Separar problema local, acesso, DNS, NAT, Wi-Fi,
+Suporte
+CPE e cliente isolado.
+
+Correlacionar métricas, logs, rotas, sessões, serviços
+NOC
+e impacto regional.
+
+Entender IGP, BGP, MPLS, interconexão,
+Backbone
+redundância e engenharia de tráfego.
+
+Projetar arquitetura, padronizar operação, criar
+Engenharia
+boas práticas e reduzir incidentes recorrentes.
+
+---
+
+<!-- Página 6 do PDF -->
+
+## Visão executiva e roteiro de estudo
+
+Conteúdo original preservado
+
+A seção a seguir mantém a visão executiva e o roteiro de estudo da apostila base. A partir dos módulos,
+foram adicionados blocos didáticos e visuais antes e depois do conteúdo técnico original.
+
+Visão executiva Esta apostila foi estruturada para levar alguém que hoje atua em suporte, atendimento
+técnico ou operação inicial a um nível em que consiga conversar com segurança com NOC, operar
+mudanças controladas e, gradualmente, migrar para engenharia de ISP. A sequência escolhida segue a
+dependência natural entre os temas: primeiro a base de IP, transporte e resolução de nomes; depois
+tradução de endereços e esgotamento do IPv4; em seguida roteamento interno e externo; por fim
+backbone/MPLS e observabilidade. Essa ordem é coerente com o modo como os próprios protocolos se
+apoiam entre si em redes de provedores. 1 Em uma rede de provedor regional, o profissional precisa
+entender simultaneamente três camadas de realidade. A primeira é a do assinante: CPE, DNS, NAT,
+PPPoE, lentidão, perda e indisponibilidade. A segunda é a da operação: tabelas de roteamento,
+autenticação, logs, filas, flows, monitoramento e escalonamento. A terceira é a da interconexão: ASN,
+trânsito IP, peering, IX, políticas BGP, validação de origem e backbone de transporte. Sem essa visão
+encadeada, o técnico costuma “trocar peça lógica” sem achar causa raiz. 2 O ponto mais importante para
+a transição de suporte para NOC/engenharia é parar de raciocinar só em “internet funciona / não
+funciona” e passar a raciocinar em fluxos: como o pacote saiu, como foi resolvido o nome, onde ele sofreu
+NAT, como a rota foi escolhida, como o tráfego foi exportado para flow/log, e qual métrica indicou a falha.
+Em ambientes ISP modernos, isso também implica conviver com duas realidades ao mesmo tempo: IPv4
+ainda amplamente usado, mas pressionado por escassez; e IPv6 cada vez mais necessário para reduzir
+dependência de CGNAT e simplificar a operação.
+
+As referências primárias usadas aqui priorizam documentos da IETF 4 , guias do RIPE NCC 5 e
+documentação de fabricantes com foco operacional, complementadas por materiais brasileiros do NIC.br,
+Registro.br e IX.br. Para práticas de interconexão e higiene de roteamento, as recomendações do MANRS e
+o uso de bases públicas como a PeeringDB 6 aparecem como peças centrais da maturidade operacional. 7
+
+Roteiro de estudo sugerido A trilha abaixo foi desenhada para estudo progressivo, já pensando em alguém
+que trabalha e precisa de sequência prática. O tempo é uma recomendação pedagógica, não um requisito
+rígido.
+
+Módulo Foco Tempo sugerido Objetivo de saída
+
+Base IP, Diagnosticar
+encapsulamento, conectividade do host
+Redes de computadores 10 a 14 h
+TCP/UDP, ICMP, MTU, ao gateway e ao
+troubleshooting upstream
+
+POP, borda, BNG, Entender como o
+Fundamentos de rede
+PPPoE, trânsito, 10 a 12 h assinante chega até a
+ISP
+peering, IX, ASN Internet
+
+Recursivo, autoritativo, Investigar falhas de
+DNS 8 a 10 h
+cache, DNSSEC, resolução e risco de
+
+---
+
+<!-- Página 7 do PDF -->
+
+segurança recursivo aberto
+
+NAT residencial/CPE,
+Fazer e depurar NAT
+NAT srcnat, dstnat, 8 a 10 h
+básico com segurança
+conntrack, hairpin
+
+Correlacionar IP, porta
+NAT444, RFC 6598,
+CGNAT 12 a 16 h e horário a um
+logs, BPA, operação
+assinante
+
+Entender como POPs e
+IGP de backbone, áreas,
+OSPF 12 a 16 h loopbacks se enxergam
+LSDB, SPF, underlay
+internamente
+
+eBGP/iBGP, política, Operar borda, peering,
+BGP route-reflector, filtros, 16 a 22 h trânsito e higiene de
+RPKI anúncios
+
+Enxergar backbone
+Labels, LDP, VRF,
+MPLS 16 a 22 h como transporte de
+L3VPN, PE/P
+serviços
+
+SNMP, flow, logs, Fechar o ciclo de
+Monitoramento ISP latência, alertas, 12 a 16 h operação, trend e
+backup de config resposta a incidentes
+
+Uma boa cadência semanal para quem já trabalha é: 2 módulos por mês no começo, reservando o bloco
+maior para BGP e MPLS. A ordem recomendada faz sentido porque PPPoE/DNS/NAT explicam a
+percepção do cliente; OSPF sustenta a malha interna; BGP conecta o provedor ao resto da Internet; e
+MPLS reaproveita esse underlay para entregar serviços mais organizados. 8 Como meta prática, tente
+encerrar cada módulo com um “artefato” operacional: uma topologia desenhada, um checklist, um bloco
+de comandos, um caso de troubleshooting e um resumo de 1 página. Esse hábito acelera a passagem de
+suporte para NOC porque transforma conhecimento em procedimento repetível. A própria documentação
+de fabricantes e plataformas de monitoramento é escrita em formato operacional, com configuração,
+verificação e troubleshooting, então vale estudar do mesmo jeito. 9
+
+---
+
+<!-- Página 8 do PDF -->
+
+## Base de redes e arquitetura ISP
+
+---
+
+<!-- Página 9 do PDF -->
+
+## Módulo 1 - Redes de computadores
+
+### Abertura com cenário real
+
+Um cliente informa que o Wi-Fi conecta, mas a navegação está instável. O técnico precisa descobrir se o
+problema está no dispositivo, no gateway, no DNS, na rota, na perda de pacotes ou no destino.
+
+### Por que isso importa?
+
+Sem essa base, o técnico troca equipamentos e reinicia roteadores sem provar a camada do problema. O
+NOC espera que o diagnóstico venha separado por IP, DNS, rota e qualidade.
+
+### Nível do módulo e onde é usado
+
+Nível: Base essencial | Suporte → NOC
+
+Onde aparece no ISP: Primeira triagem de chamados: cliente sem navegação, lentidão, perda, falha de
+DNS, falha de gateway e problemas de MTU.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Confirmar IP, máscara, gateway, DNS, ping para
+Suporte
+gateway, ping para IP público e teste por nome.
+
+Correlacionar perda, latência, jitter, interface, CPU,
+NOC
+rota, MTU e horário do chamado.
+
+Padronizar endereçamento, MTU, políticas de QoS,
+Engenharia
+baseline de latência e documentação de fluxos.
+
+### Pergunta rápida antes de continuar
+
+Se o cliente pinga 8.8.8.8, mas não resolve google.com, qual hipótese vem primeiro?
+
+Resposta esperada: Falha de DNS ou entrega incorreta de DNS ao cliente, porque a conectividade IP
+existe, mas a resolução de nomes falha.
+
+---
+
+<!-- Página 10 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Diagrama do fluxo Cliente → CPE → Gateway → BNG → Borda → Internet, com DNS e
+qualidade separados.
+
+### Alerta operacional
+
+Não classifique como 'internet fora' antes de separar conectividade IP, DNS, rota e qualidade.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. Redes ISP começam em fundamentos simples: endereço IP, máscara, gateway, tabela de rotas,
+protocolos de transporte e mensagens de controle. O IPv4 foi definido para transportar datagramas entre
+hosts identificados por endereços fixos, com suporte a fragmentação e remontagem; o IPv6 foi padronizado
+para continuidade do crescimento da Internet e reduz a dependência de tradução de endereços em muitos
+cenários. O TCP fornece transporte confiável em fluxo; o UDP fornece datagramas sem conexão; o ICMP
+fornece mensagens de controle e diagnóstico. 10
+
+Explicação didática progressiva. Pense em quatro perguntas básicas: quem sou eu, para onde vou, por
+qual próximo salto saio, e como sei se o caminho está vivo. “Quem sou eu” é o IP/máscara. “Para onde
+vou” é o destino. “Por qual próximo salto saio” é a decisão de roteamento. “Como sei se o caminho está
+vivo” aparece em ferramentas como ping e traceroute. No RouterOS, o próprio fluxo de pacotes passa por
+decisões de bridging, routing, MPLS e processos locais; isso é importante porque o mesmo incidente pode
+estar em camadas diferentes. 11 Quando um cliente reclama de “lentidão”, o problema raramente está só
+em “a Internet”. Pode ser perda, latência, jitter, MTU, DNS, fila, CPU, interface, rota, NAT ou aplicação.
+O SmokePing existe justamente porque medir só “up/down” é insuficiente: ele mede latência, distribuição
+de latência e perda de pacotes ao longo do tempo. Em NOC, essa diferença entre disponibilidade e
+qualidade separa o diagnóstico raso do diagnóstico útil. 12 Lista e definição de termos técnicos. • Endereço
+IP: identificador lógico do host na rede. Em IPv4, é composto por quatro octetos; em IPv6, por 128 bits.
+
+---
+
+<!-- Página 11 do PDF -->
+
+13 • Máscara/prefixo: parte que separa rede e host. 14 • Gateway padrão: próximo salto usado para
+destinos fora da rede local. 15 • TCP: transporte orientado a conexão, confiável. 16 • UDP: transporte sem
+conexão, menor overhead. 17 • ICMP: protocolo de mensagens de controle, usado por ping. 18 • MTU:
+tamanho máximo de unidade de transmissão; quando incoerente, gera fragmentação ou queda. 19 •
+Latência / perda / jitter: métricas operacionais de qualidade percebida e saúde de rede. 20 Exemplo real
+aplicado a ISP/FTTH. Um assinante em FTTH conecta seu roteador/CPE ao provedor e recebe parâmetros
+de conectividade por DHCP ou PPPoE. Se a sessão estiver ativa, mas o cliente só consegue pingar IPs e não
+nomes, o problema provavelmente está em DNS. Se nem IP responde, o problema sobe para gateway, rota,
+NAT ou upstream. Esse raciocínio em camadas é o que um NOC espera enxergar num técnico em evolução.
+21 Diagrama em texto.
+flowchart LR
+A[Cliente/CPE] --> B[Gateway de Acesso]
+B --> C[Roteador/BNG do ISP]
+C --> D[Borda do ISP]
+D --> E[Internet]
+A -.consulta DNS.-> F[Servidor DNS]
+A -.ping/traceroute.-> E
+O fluxo acima resume o que você deve imaginar sempre que abrir um chamado: acesso, roteamento,
+serviços auxiliares e saída para Internet. 22
+Aplicação prática no provedor. Em suporte/NOC, o primeiro salto do amadurecimento é padronizar
+testes: ping no gateway do cliente, ping em IP público bem conhecido, ping por nome, traceroute,
+checagem de interface e análise de tráfego em tempo real. O RouterOS já traz ping, traceroute, torch
+e
+packet sniffer como ferramentas nativas de troubleshooting. 23
+
+Erros comuns. • Tratar todo problema como “DNS” ou “roteador do cliente” sem testar IP e nome
+separadamente. 24 • Ignorar MTU em cenários com túneis, PPPoE ou MPLS. 25 • Medir só disponibilidade,
+sem medir latência e perda. 12 • Não distinguir pacote para o roteador do tráfego que apenas atravessa o
+roteador.
+
+Checklist operacional. • Confirmar IP, máscara, gateway e método de acesso do cliente. • Testar
+conectividade por IP antes de testar por nome. 27 • Verificar caminho com traceroute. 28 • Observar
+tráfego real com torch ou captura. 29 • Registrar horário exato e sintomas com precisão. 30
+
+Troubleshooting com passos de diagnóstico. 1. Validar link físico, interface e obtenção de IP. 15 2. Testar
+ping para o gateway local. Se falhar, ainda não é “Internet”; é acesso local ou autenticação. 15 3. Testar
+ping para um IP público conhecido. Se funcionar, o problema tende a estar em DNS ou política de
+aplicação. 27 4. Rodar traceroute para entender onde a rota “morreu”. 28 5. Se houver tráfego anômalo,
+usar torch/sniffer. 29 Comandos úteis em MikroTik. Exemplos abaixo assumem RouterOS v7; em Cisco,
+Junos e Huawei a lógica é a mesma, mas a sintaxe, a hierarquia e vários defaults mudam. 31
+/ping 8.8.8.8 /ping google.com /tool traceroute 8.8.8.8 /tool torch interface=ether1 /tool sniffer
+quick ip-protocol=icmp /ip address print /ip route print Boas práticas.
+- Tenha um roteiro fixo de teste por camadas. 32
+- Separe claramente incidente local, incidente de serviço e incidente de upstream.
+- Use monitoramento histórico para confirmar se é evento pontual ou recorrente.
+
+Resumo. Antes de estudar OSPF, BGP ou MPLS, é obrigatório dominar IP, gateway, transporte, ICMP e
+ferramentas básicas. Sem isso, qualquer tecnologia “avançada” vira chute. 35 Perguntas de revisão com
+respostas. • Por que ping por IP e por nome contam histórias diferentes? Porque o primeiro testa
+conectividade IP e o segundo acrescenta a etapa de resolução DNS. 36 • Quando usar traceroute? Quando
+há conectividade parcial ou intermitente e você precisa localizar o ponto provável de falha no caminho. 28
+
+---
+
+<!-- Página 12 do PDF -->
+
+- Por que medir latência histórica ajuda? Porque indisponibilidade nem sempre é total; degradação
+progressiva de RTT e perda costuma anteceder incidentes. 12 Glossário.
+- RTT: round-trip time. 37
+- MTU: maximum transmission unit. 19
+- CPE: equipamento do cliente na borda de acesso.
+
+### Missão prática do módulo
+
+### Missão prática
+
+Monte um mini-checklist de 7 passos para um chamado de 'sem internet': IP, gateway, ping local, ping IP
+público, DNS, traceroute e medição de perda/latência. Registre em qual etapa a falha aparece.
+
+### Resumo de bolso
+
+- IP correto não garante navegação.
+- Ping por IP testa conectividade; ping por nome também testa DNS.
+- Traceroute mostra caminho, mas não prova sozinho a causa.
+- Perda e jitter explicam experiência ruim mesmo com link 'up'.
+- MTU incorreta costuma aparecer em PPPoE, túneis e MPLS.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Diagrama do fluxo Cliente → CPE → Gateway → BNG → Borda → Internet, com
+DNS e qualidade separados.
+
+Prompt sugerido: Crie um diagrama técnico em português mostrando Cliente, CPE, Gateway, BNG,
+Borda, Internet, DNS, ping, traceroute, latência, perda, jitter e MTU, com estilo limpo de treinamento
+ISP.
+
+---
+
+<!-- Página 13 do PDF -->
+
+## Módulo 2 - Fundamentos de rede ISP
+
+### Abertura com cenário real
+
+Uma cidade inteira relata lentidão. A OLT está online, PPPoE autentica, mas o tráfego sai por rota
+alternativa. O analista precisa diferenciar acesso, agregação, core e borda.
+
+### Por que isso importa?
+
+Quando o técnico sabe em qual camada a falha mora, ele escala melhor e evita abrir chamados genéricos
+para o NOC.
+
+### Nível do módulo e onde é usado
+
+Nível: Base operacional | Suporte → NOC → Redes
+
+Onde aparece no ISP: Entender a jornada do assinante: ONU, OLT, VLAN, BNG/BRAS, autenticação,
+core, borda, trânsito, IX e serviços auxiliares.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Identificar se o problema parece cliente isolado,
+Suporte
+CTO/PON, OLT, autenticação, DNS ou falha geral.
+
+Verificar POP, uplinks, BNG, sessões, filas, rotas
+NOC
+internas, CGNAT, DNS e borda.
+
+Projetar topologia, redundância, capacidade,
+Engenharia separação de tráfego, endereçamento e
+documentação de POPs.
+
+### Pergunta rápida antes de continuar
+
+Cliente autenticado no PPPoE, mas sem navegar. Isso elimina problema no ISP?
+
+Resposta esperada: Não. A autenticação só prova uma etapa. Ainda pode haver falha de rota, DNS,
+NAT/CGNAT, firewall, upstream ou destino.
+
+---
+
+<!-- Página 14 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Topologia FTTH completa do assinante até Internet com camadas do ISP.
+
+### Alerta operacional
+
+Não trate 'PPPoE conectado' como sinônimo de 'Internet normal'.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. Uma rede ISP não é só “um link para Internet”. Ela costuma ter rede de acesso, agregação,
+autenticação/AAA, borda, trânsito IP, peering, eventualmente IX, e um ASN que a representa no
+ecossistema global. Em termos práticos, o assinante acessa o provedor por DHCP ou PPPoE, o provedor
+decide por onde sair, e a borda troca rotas com trânsito e pares via BGP. IXPs usam sessões BGP com
+route servers para facilitar interconexão multilateral. 39 Explicação didática progressiva. Comece pelo
+caminho do assinante. Em muitos cenários, o CPE usa PPPoE, que tem fase de descoberta e fase de sessão;
+o concentrador/BNG autentica o usuário e pode integrar-se a RADIUS/AAA. A partir daí, o tráfego entra
+na rede do provedor, que o encaminha internamente e depois o entrega a trânsito IP, peering privado ou
+peering público em IXP/IX. O peering reduz caminho e latência ao trocar tráfego diretamente entre redes;
+o route server permite que um participante tenha uma sessão BGP com o servidor de rotas e enxergue
+vários outros participantes de forma escalável. 40 Lista e definição de termos técnicos. • POP: ponto de
+presença operacional do provedor; onde existem equipamentos e enlaces locais. • BNG/BRAS: elemento de
+agregação/autenticação do acesso banda larga. • PPPoE: encapsulamento PPP sobre Ethernet, com
+descoberta e sessão. 41 • AAA/RADIUS: autenticação, autorização e accounting para acesso. 42 • ASN:
+número de sistema autônomo usado em interconexão BGP. 43 • Trânsito IP: serviço pago para alcançar o
+restante da Internet. 44 • Peering: troca direta de tráfego entre redes. 44 • Route server: servidor BGP
+em IXP que facilita peering multilateral. 45 Exemplo real aplicado a ISP/FTTH. Um provedor FTTH
+regional pode autenticar clientes via PPPoE/ RADIUS, entregar DNS e rota default ao acesso, manter um
+ou dois fornecedores de trânsito IP e ainda conectar-se ao IX.br para reduzir latência para conteúdo
+
+---
+
+<!-- Página 15 do PDF -->
+
+popular e outras redes. Na prática, isso significa que um problema percebido pelo assinante pode nascer no
+acesso, no AAA, no DNS, na borda ou na política de interconexão. 46 Diagrama em texto.
+flowchart LR
+A[Cliente FTTH / CPE] --> B[Agregação / BNG]
+B --> C[Core do ISP]
+C --> D[Trânsito IP]
+C --> E[Peering privado]
+C --> F[IX / Route Server]
+D --> G[Internet]
+
+E --> G F --> G Esse desenho resume a diferença entre chegar à Internet por terceiro e trocar tráfego
+diretamente com outras redes. 47 Aplicação prática no provedor. Para um técnico em transição para NOC,
+os fundamentos de ISP significam aprender a perguntar: o cliente autenticou? recebeu IP? recebeu DNS?
+tem rota default? o problema aparece só para um destino ou para todos? o tráfego sai por trânsito ou por
+peering? Isso muda totalmente o plano de ação. 48 Erros comuns.
+
+- Ter só um caminho de saída e chamar isso de “redundância”.
+- Não separar conceitos de acesso, agregação e borda.
+- Operar peering sem manter informações de contato e política atualizadas.
+- Entrar em IX sem entender communities, filtros e validação. 50
+
+Checklist operacional. • Documentar método de acesso do assinante: DHCP ou PPPoE. 51 • Validar
+integração AAA/RADIUS quando houver. 42 • Manter política de peering, contatos e dados públicos
+atualizados. 52 • Registrar quais destinos saem por trânsito e quais podem sair por peering/IX. • Aplicar
+ações de filtragem, anti-spoofing, coordenação e validação global. 53
+
+Troubleshooting com passos de diagnóstico. 1. Verificar se há sessão PPPoE ou concessão de DHCP.
+
+2. Confirmar parâmetros recebidos: IP, gateway, DNS, rota default. 15 3. Identificar se o problema ocorre
+para “a Internet toda” ou para um conjunto de ASs/destinos. 55 4. Checar se a saída esperada é trânsito
+ou peering/IX. 47 5. Se o incidente for de interconexão, escalar com dados de ASN, horário e destinos
+afetados. 52 Comandos úteis em MikroTik. Em acesso, a sintaxe de PPPoE e RADIUS varia pouco em
+conceito, mas bastante entre fabricantes. No RouterOS, PPPoE e RADIUS são nativos; em outros
+fabricantes, a lógica existe, porém a modelagem muda. 56
+
+/interface pppoe-client add disabled=no interface=ether1 user=usuario password=senha \ add-default-
+route=yes use-peer-dns=yes /radius print /ppp aaa print /ip route print /ip dhcp-client print Boas
+práticas.
+- Ter ao menos duas visões de saída: trânsito e interconexão direta quando fizer sentido econômico e
+técnico. 47
+- Publicar e manter dados no PeeringDB e contatos operacionais atualizados.
+- Adotar as quatro ações do MANRS como base mínima de higiene. 53
+
+Resumo. Fundamentos de ISP são a ponte entre “rede local” e “Internet global”. Quem domina
+autenticação, saída, peering e borda começa a pensar como NOC. 58 Perguntas de revisão com respostas. •
+Peering é a mesma coisa que trânsito IP? Não. Peering é troca direta entre redes; trânsito é compra de
+alcance para o restante da Internet. 44 • PPPoE tem sessão? Sim. Ele opera em fase de descoberta e fase
+de sessão. 59 • Por que route server ajuda? Porque reduz a necessidade de manter sessões bilaterais com
+cada participante de um IXP. 45 Glossário. • AAA: authentication, authorization and accounting. 60 •
+IXP/IX: ponto de troca de tráfego com interconexão multilateral. • AS/ASN: sistema autônomo e seu
+número. 61
+
+---
+
+<!-- Página 16 do PDF -->
+
+### Missão prática do módulo
+
+### Missão prática
+
+Desenhe a topologia do seu provedor ou de um ISP fictício do cliente até a Internet, marcando onde você
+testaria acesso, autenticação, DNS, CGNAT, core e borda.
+
+### Resumo de bolso
+
+- Acesso é diferente de autenticação.
+- Core é diferente de borda.
+- Trânsito IP é diferente de peering.
+- IX/route server não substitui política BGP.
+- Serviços como DNS/CGNAT fazem parte da experiência do cliente.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Topologia FTTH completa do assinante até Internet com camadas do ISP.
+
+Prompt sugerido: Crie uma topologia didática de ISP FTTH em português com Cliente, ONU, OLT,
+BNG/BRAS, Core, Borda, CGNAT, DNS, Trânsito IP, IX.br e CDN/cache.
+
+---
+
+<!-- Página 17 do PDF -->
+
+## Módulo 3 - DNS
+
+### Abertura com cenário real
+
+Vários clientes dizem que 'a internet conecta, mas sites não abrem'. Ping para IP público funciona; ping
+por nome falha ou demora.
+
+### Por que isso importa?
+
+DNS ruim parece 'internet ruim'. Um recursor mal configurado também pode virar vetor de abuso por
+amplificação.
+
+### Nível do módulo e onde é usado
+
+Nível: Operacional | Suporte → NOC
+
+Onde aparece no ISP: Chamados onde o cliente tem IP, link e ping por IP, mas sites não abrem ou a
+navegação demora para iniciar.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Testar IP vs nome, conferir DNS entregue por
+Suporte DHCP/PPPoE e testar resolver alternativo apenas
+para diagnóstico.
+
+Monitorar recursors, tempo de resposta, falhas,
+NOC ACLs, cache, DNSSEC e exposição indevida na porta
+53.
+
+Projetar recursivos redundantes, restritos à base de
+Engenharia clientes, com validação DNSSEC e separação entre
+autoritativo e recursivo.
+
+### Pergunta rápida antes de continuar
+
+Por que um recursor DNS aberto é problema mesmo que 'esteja respondendo'?
+
+Resposta esperada: Porque pode ser usado por qualquer origem na Internet para reflexão/amplificação,
+gerando abuso contra terceiros e tráfego indevido no ISP.
+
+---
+
+<!-- Página 18 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Fluxo Cliente → Resolver recursivo → Root/TLD/Autoritativo → Resposta/cache.
+
+### Alerta operacional
+
+Recursivo do provedor deve responder aos clientes autorizados, não a qualquer origem da Internet.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. O DNS é um sistema hierárquico e distribuído que liga nomes a endereços e outros dados. Os
+RFCs clássicos separam conceitos e facilidades do sistema (RFC 1034) da especificação de protocolo e
+formato (RFC 1035). Para provedores, a operação prática gira em torno de resolvers recursivos, cache,
+segurança contra abuso, DNSSEC e disponibilidade. 62 Explicação didática progressiva. Há duas funções
+que um técnico de ISP precisa distinguir muito bem. Servidor autoritativo responde por uma zona pela
+qual ele é responsável. Servidor recursivo resolve nomes em nome do cliente, usando cache para acelerar
+consultas repetidas. No RouterOS, quando allow-remote-requests=yes , o roteador passa a responder
+consultas DNS TCP e UDP na porta 53 para clientes remotos; por isso a própria documentação manda
+restringir o acesso apenas a hosts conhecidos. 63 O risco clássico de má configuração é o recursivo aberto.
+O material de boas práticas do NIC.br descreve como servidores recursivos abertos podem ser abusados em
+ataques de reflexão/amplificação DNS, inclusive com amplificação aproximada de 10 a 80 vezes em
+cenários documentados. Para um provedor, isso significa dois riscos ao mesmo tempo: virar vetor de DDoS
+contra terceiros e receber tráfego indevido que afeta a própria operação. 64 DNSSEC não “criptografa o
+DNS inteiro”, mas autentica dados DNS por assinaturas e cadeia de confiança. O Registro.br mantém
+material específico para provedores e treinamentos do NIC.br destacam como boas práticas de resolver
+recursivo incluem validação DNSSEC e acesso restrito somente aos próprios usuários. 65 Lista e definição
+de termos técnicos. • Resolver recursivo: servidor que pergunta em nome do cliente. • Servidor autoritativo:
+servidor responsável pela zona. 62 • Cache DNS: armazenamento temporário de respostas. 63 • TTL:
+tempo de vida do registro em cache. 63
+
+---
+
+<!-- Página 19 do PDF -->
+
+- DNSSEC: mecanismo de validação por assinaturas digitais. 67
+- Open resolver: recursivo aberto a qualquer origem, alto risco operacional. 64
+- A / AAAA / CNAME: tipos comuns de registros DNS. No RouterOS, registros estáticos podem mapear
+para A/AAAA e CNAME. 63 Exemplo real aplicado a ISP/FTTH. Em um provedor FTTH, o CPE do
+assinante pode receber o IP do recursor do provedor como DNS principal. Isso reduz latência de
+resolução e dá controle operacional. Porém, se esse recursor ficar acessível além da base de clientes,
+vira recursivo aberto. Em MikroTik, a configuração é simples, e justamente por isso o risco de “ligar e
+esquecer” é alto. 68 Diagrama em texto.
+sequenceDiagram
+participant C as Cliente
+participant R as Resolver Recursivo ISP
+participant A as Autoritativos
+C->>R: Consulta www.exemplo.com
+R->>A: Busca iterativa/recursiva
+A-->>R: Resposta
+R-->>C: Resposta em cache
+Aplicação prática no provedor. DNS em ISP não é só “resolver nome”. É parte da experiência do
+assinante, do tempo de carregamento, do diagnóstico de chamados e da segurança da rede. Um NOC
+maduro monitora disponibilidade do serviço DNS, tempo de resposta, cache hit e falhas por origem. O
+Netwatch do RouterOS, por exemplo, já suporta probes do tipo DNS, além de ICMP, TCP e HTTP/HTTPS.
+
+Erros comuns. • Ativar recursão remota e não filtrar porta 53. 70 • Misturar função autoritativa e
+recursiva sem critério operacional. 71 • Não validar DNSSEC em resolver recursivo, sobretudo em
+ambientes que prometem qualidade e segurança. 72 • Tentar explicar tudo como “site fora do ar” sem
+separar falha de DNS de falha IP. 24 Checklist operacional. • Restringir consultas recursivas aos próprios
+clientes. 66 • Filtrar TCP/UDP 53 por origem. 63 • Planejar redundância de recursors. 63 • Avaliar
+validação DNSSEC. 72 • Testar seus servidores com ferramentas do Registro.br quando aplicável.
+
+Troubleshooting com passos de diagnóstico. 1. Testar conectividade IP antes de culpar DNS. 2. Verificar
+se o cliente recebe DNS correto pelo DHCP/PPPoE. 24 3. Confirmar se o recursor responde e não está
+saturado. 74 4. Em incidente generalizado, checar firewall/ACL da porta 53 e status do serviço. 70 5. Em
+incidentes de segurança, verificar se o host virou open resolver. 64
+
+Comandos úteis em MikroTik. Exemplo de sintaxe RouterOS v7. Se o roteador não vai servir cache
+recursivo para clientes, a própria documentação recomenda desabilitar allow-remote-requests .
+/ip dns set servers=1.1.1.1,8.8.8.8 allow-remote-requests=yes /ip dns static add
+name=www.exemplo.local address=10.0.0.10 /ip firewall filter add chain=input protocol=udp dst-port=53
+src-address=10. 0.0.0/8 action=accept /ip firewall filter add chain=input protocol=tcp dst-port=53
+src-address=10. 0.0.0/8 action=accept /ip firewall filter add chain=input protocol=udp dst-port=53
+action=drop /ip firewall filter add chain=input protocol=tcp dst-port=53 action=drop Boas práticas.
+- Resolver recursivo só para sua base. 75
+- Observabilidade de disponibilidade e latência do DNS. 76
+- Validação DNSSEC no recursivo quando compatível com arquitetura e equipamentos.
+
+Resumo. DNS é um serviço crítico de operação e percepção do assinante. Em ISP, o erro mais perigoso não
+é só “DNS lento”, mas “DNS aberto”. 75 Perguntas de revisão com respostas. • Qual a diferença entre
+autoritativo e recursivo? O autoritativo responde pela zona; o recursivo resolve em nome do cliente. 62 •
+Por que open resolver é ruim? Porque pode ser abusado em reflexão/amplificação DNS. 64 • DNSSEC
+substitui firewall? Não. Ele autentica dados DNS; não substitui controle de acesso nem ACL de recursão. 77
+Glossário. • TTL: tempo de retenção em cache. 63 • DNSSEC: extensões de segurança do DNS. 78 • Open
+resolver: recursor aberto para terceiros.
+
+---
+
+<!-- Página 20 do PDF -->
+
+## Tradução de endereços e esgotamento do IPv4
+
+### Missão prática do módulo
+
+### Missão prática
+
+Teste um resolver: ping por IP, consulta por nome, consulta a partir de uma origem autorizada e de uma
+não autorizada. Documente se ele responde, recusa ou expõe recursão indevida.
+
+### Resumo de bolso
+
+- Pinga IP e não resolve nome: suspeite DNS.
+- Autoritativo responde por zona; recursivo resolve para o cliente.
+- Open resolver é risco operacional.
+- DNSSEC valida autenticidade, não criptografa tudo.
+- Recursors precisam de redundância e ACL.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Fluxo Cliente → Resolver recursivo → Root/TLD/Autoritativo → Resposta/cache.
+
+Prompt sugerido: Crie um diagrama em português mostrando Cliente, Resolver Recursivo do ISP, Root,
+TLD, Autoritativo, Cache, DNSSEC e risco de Open Resolver.
+
+---
+
+<!-- Página 21 do PDF -->
+
+## Módulo 4 - NAT
+
+### Abertura com cenário real
+
+Cliente pede abertura de porta para câmera. De fora não acessa, de dentro funciona, mas pelo IP público
+falha. Pode ser dstnat, firewall, IP público, CGNAT ou hairpin.
+
+### Por que isso importa?
+
+NAT altera o caminho lógico do pacote. Sem entender tradução e conntrack, o técnico aplica regra sem
+saber se a conexão antiga ainda está presa no estado anterior.
+
+### Nível do módulo e onde é usado
+
+Nível: Operacional | Suporte avançado → NOC
+
+Onde aparece no ISP: Problemas com acesso externo, câmeras, DVR, jogos, publicação de serviços, hairpin
+e inconsistência de regras.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Verificar se o cliente tem IP público, regra de porta,
+Suporte
+IP interno correto e teste de fora da rede.
+
+Analisar tabela NAT, conntrack, firewall, rota de
+NOC
+retorno e se há CGNAT no caminho.
+
+Definir política de NAT, logs, exceções, pools
+Engenharia públicos, hairpin e desenho seguro para serviços
+publicados.
+
+### Pergunta rápida antes de continuar
+
+Por que testar port forward de dentro da própria LAN pode enganar?
+
+Resposta esperada: Porque pode exigir hairpin NAT; o teste correto de publicação deve ser feito de fora da
+rede ou com regra hairpin prevista.
+
+---
+
+<!-- Página 22 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Comparativo visual srcnat, dstnat, hairpin e conntrack.
+
+### Alerta operacional
+
+NAT não é firewall. Uma regra de tradução não substitui política de permissão/bloqueio.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. NAT tradicional permite que hosts dentro de uma rede privada acessem redes externas por
+meio da tradução de endereços, em muitos casos combinada com tradução de portas. No RouterOS, NAT é
+suportado para IPv4; as regras casam no primeiro pacote da conexão, e a connection tracking mantém a
+decisão para os pacotes seguintes. Quando regras NAT mudam, a própria documentação recomenda limpar
+a tabela de conexões para evitar comportamento aparentemente incoerente até a expiração das entradas.
+79 Explicação didática progressiva. O NAT do dia a dia em provedores e CPEs tem duas faces. Source NAT
+esconde endereços internos atrás de um IP de saída. Destination NAT publica um serviço interno para
+acesso externo. Em RouterOS, src-nat , dst-nat , masquerade e netmap são as ações
+
+mais conhecidas. Para suporte e NOC, a parte crítica é entender que firewall stateful e NAT dependem de
+connection tracking; então “mexer na regra” não muda conexões já abertas. 80 O NAT também explica
+muitos falsos diagnósticos. Um acesso externo para um servidor interno falha não só por causa do dst-nat ;
+pode falhar por filtro, rota de retorno ou hairpin NAT. A documentação da MikroTik ilustra que, em
+acesso interno a um serviço publicado pelo próprio IP público do roteador, o servidor pode responder
+diretamente ao cliente na mesma sub-rede e o cliente descartar a resposta por esperar o IP público, não o
+IP privado do servidor. É o caso clássico de hairpin NAT. 81 Lista e definição de termos técnicos.
+
+- Source NAT / srcnat: troca o IP de origem na saída. 81
+- Destination NAT / dstnat: troca o IP de destino na entrada. 81
+- Masquerade: forma de source NAT adaptada a IPs dinâmicos. 81
+
+---
+
+<!-- Página 23 do PDF -->
+
+- Netmap: mapeamento 1:1 estático. 81
+- Conntrack: rastreamento de conexões, base do NAT stateful. 82
+- Hairpin NAT: acesso interno a serviço publicado via IP público do próprio roteador, exigindo NAT
+adicional. 81 Exemplo real aplicado a ISP/FTTH. O cliente residencial costuma usar NAT44 no
+roteador da casa. O provedor entrega um IP público ou, em cenários mais pressionados, um IP
+privado/compartilhado e o tráfego é traduzido depois. No cenário mais simples, o assinante sai para a
+Internet por source NAT no CPE e consegue publicar uma câmera ou RDP com dst-nat se tiver IP
+público e política adequada.
+
+Diagrama em texto.
+flowchart LR A[LAN 192.168.88.0/24] --> B[Roteador com srcnat] B --> C[IP público] C --> D[Internet]
+E[Internet] --> C C --> B B --> F[Servidor interno via dstnat] Aplicação prática no provedor. NAT
+básico ainda é rotina de atendimento: publicar um serviço, entender por que o acesso externo não entra,
+diferenciar problema de NAT de problema de firewall. Em CPE gerenciado ou em roteadores corporativos
+de clientes, o técnico que domina NAT ganha produtividade imediata. 83 Erros comuns.
+- Alterar regra NAT e esquecer que conexões antigas continuam na conntrack.
+- Tratar NAT como substituto de política de segurança. 84
+- Publicar serviço com dst-nat mas esquecer firewall de forward. 15
+- Ignorar hairpin NAT em testes internos do serviço publicado.
+
+Checklist operacional. • Validar uso de IP privado RFC 1918 internamente. 85 • Confirmar rota de saída
+e IP público. 15 • Conferir regras NAT e regras de filtro juntas. 84 • Limpar conntrack em mudança
+relevante de regra. 80 Troubleshooting com passos de diagnóstico. 1. Confirmar se o tráfego realmente sai
+pela interface esperada. 15 2. Verificar regra srcnat / dstnat e ordem de avaliação. 81 3. Conferir
+conntrack para garantir que a tradução aplicada é a atual. 4. Se o teste interno para IP público falhar,
+avaliar hairpin NAT. 81 5. Validar também o firewall de encaminhamento. 15
+
+Comandos úteis em MikroTik.
+/ip firewall nat add chain=srcnat src-address=10.0.0.0/24 \
+action=src-nat to-addresses=172.16.16.1 out-interface=WAN
+/ip firewall nat add chain=dstnat protocol=tcp dst-address=172.16.16.1 \
+dst-port=22 action=dst-nat to-addresses=10.0.0.3
+/ip firewall connection print
+/ip firewall nat print
+Os exemplos acima refletem exatamente a sintaxe documentada para src-nat e dst-nat em
+RouterOS.
+
+Boas práticas. • Usar NAT conscientemente e documentar publicações/forwardings. 81 • Tratar conntrack
+como parte do troubleshooting, não como detalhe escondido. 86 • Planejar IPv6 para diminuir
+dependência estrutural de NAT em médio prazo. 87 Resumo. NAT básico parece simples, mas seu
+comportamento stateful explica boa parte dos chamados “misteriosos” em produção. 80 Perguntas de
+revisão com respostas. • Posso mudar uma regra NAT sem olhar conntrack? Pode, mas o efeito imediato
+pode não aparecer para conexões já estabelecidas. 80 • Masquerade é a mesma coisa que src-nat? É uma
+variação prática de source NAT, muito usada com IP dinâmico. 81 • Por que acesso interno ao IP público
+do meu próprio serviço pode falhar? Por causa da necessidade de hairpin NAT e da rota de retorno do
+servidor. 81 Glossário. • PAT: tradução de portas associada à multiplexação de conexões. • Conntrack:
+rastreamento de conexão. 86
+
+- Hairpin: retorno interno via IP público.
+
+---
+
+<!-- Página 24 do PDF -->
+
+### Missão prática do módulo
+
+### Missão prática
+
+Simule um port forward: identifique IP privado, porta interna, porta pública, regra dstnat, regra filter e
+teste externo. Depois explique se hairpin seria necessário.
+
+### Resumo de bolso
+
+- SrcNAT muda origem; DstNAT muda destino.
+- Masquerade é útil, mas pode ocultar decisões ruins.
+- Conntrack guarda estado.
+- Hairpin resolve acesso interno ao IP público.
+- Cliente em CGNAT não recebe conexão direta da Internet.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Comparativo visual srcnat, dstnat, hairpin e conntrack.
+
+Prompt sugerido: Crie um diagrama técnico em português com srcnat, dstnat, hairpin NAT, IP privado,
+IP público, pacote antes/depois e tabela conntrack.
+
+---
+
+<!-- Página 25 do PDF -->
+
+## Módulo 5 - CGNAT
+
+### Abertura com cenário real
+
+Cliente informa NAT moderado no videogame e não consegue acessar DVR externamente. O atendimento
+precisa saber diferenciar NAT do roteador, CGNAT do provedor e ausência de IPv6.
+
+### Por que isso importa?
+
+CGNAT resolve falta de IPv4, mas aumenta responsabilidade operacional: logging, portas, identificação
+por horário e comunicação clara com suporte/jurídico.
+
+### Nível do módulo e onde é usado
+
+Nível: Operação de ISP | NOC → Engenharia
+
+Onde aparece no ISP: Escassez de IPv4, clientes com NAT restrito, câmeras, jogos, correlação de logs e
+oferta de IP público/IPv6.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Explicar IP público vs IP compartilhado, identificar
+Suporte se o cliente está atrás de CGNAT e orientar
+alternativas.
+
+Checar pools 100.64.0.0/10, sessões, portas, logs,
+NOC
+exaustão de recursos, horário/NTP e correlação.
+
+Dimensionar CGNAT, logging, política de portas,
+Engenharia alta disponibilidade, transição IPv6 e redução da
+dependência de IPv4.
+
+### Pergunta rápida antes de continuar
+
+Para identificar um assinante atrás de CGNAT, basta o IP público?
+
+Resposta esperada: Não. É necessário correlacionar IP privado/CGN, IP público, porta de origem, horário e
+timezone/NTP confiável.
+
+---
+
+<!-- Página 26 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Arquitetura IPv4 via CGNAT + logs + caminho IPv6 direto.
+
+### Alerta operacional
+
+CGNAT sem logging confiável vira risco operacional e jurídico.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. O CGNAT responde à escassez de IPv4 em escala de operadora. O RFC 6598 reservou o bloco
+100.64.0.0/10 como shared address space para acomodar necessidades de Carrier-Grade NAT,
+especialmente na ligação entre CPE e CGN. Em cenários NAT444, o assinante pode usar NAT no CPE e
+ainda passar por outra camada de NAT no provedor antes de sair para a Internet por IPv4 público. 88
+Explicação didática progressiva. CGNAT é NAT em escala. Isso muda tudo operacionalmente. No NAT
+residencial, o próprio cliente costuma saber qual IP privado interno usou. No CGNAT, a identificação
+correta depende de IP público de saída + porta de origem + carimbo de tempo preciso, e muitas vezes do
+bloco de portas alocado. O tutorial do NIC.br/Brasil Peering Forum trabalha tanto com CGNAT
+determinístico quanto com BPA (Bulk Port Allocation), mostra a necessidade de logs e recomenda
+infraestrutura de logs via Syslog e, preferencialmente, NetFlow/IPFIX para maior robustez. 89 O material
+também mostra um ponto valioso para a operação: se o provedor já entrega IPv6, o tráfego IPv6 do
+cliente não precisa passar pela caixa CGNAT; ele segue diretamente, enquanto o IPv4 passa pela tradução.
+Em outras palavras, IPv6 reduz a pressão sobre o CGN e simplifica o caminho para os conteúdos que já o
+suportam. 90 Lista e definição de termos técnicos. • CGNAT / CGN: NAT em escala de operadora. 91 •
+Shared Address Space: bloco 100.64.0.0/10 reservado pelo RFC 6598.
+
+- NAT444: NAT no CPE e NAT adicional no provedor.
+- BPA: bulk port allocation; alocação de blocos de portas. 94
+- Determinístico: modelo em que o mapeamento de cliente para bloco/porta segue regra previsível. 95
+- Servidor de logs CGNAT: infraestrutura para retenção e consulta de correlação. 96
+
+---
+
+<!-- Página 27 do PDF -->
+
+Exemplo real aplicado a ISP/FTTH. O material de apoio do NIC.br/BPF usa um exemplo em que o cliente
+recebe IPv4 100.64.10.50 e um prefixo IPv6 /56 ; o IPv6 segue diretamente para a Internet, e o IPv4 é
+traduzido pela caixa CGNAT para um IPv4 público, com os dados sendo registrados em um servidor de
+logs. O mesmo material descreve a busca reversa de ofício/judicial usando IP, porta e horário para chegar
+ao assinante correto. 90 Diagrama em texto.
+flowchart LR
+A[Cliente/CPE NAT44] --> B[100.64.0.0/10 dentro do ISP]
+B --> C[Caixa CGNAT]
+C --> D[IPv4 público]
+D --> E[Internet IPv4]
+A --> F[IPv6 do cliente]
+F --> G[Internet IPv6]
+
+C --> H[Servidor de Logs CGNAT] Tabela comparativa - NAT vs CGNAT Item
+
+NAT tradicional
+
+CGNAT
+
+Escala típica
+
+CPE ou roteador local
+
+Provedor / operadora
+
+Blocos usados
+
+RFC 1918 internos
+
+RFC 1918 no cliente + 100.64.0.0/10 no ISP
+
+Correlação de usuário
+
+Mais simples
+
+Exige IP, porta e horário precisos
+
+Publicação de serviços
+
+Possível com IP público
+
+Muito limitada ou inviável para o assinante comum
+
+Impacto operacional
+
+Local
+
+Central, com necessidade de logs e observabilidade
+
+Fonte: RFC 1918, RFC 3022, RFC 6598 e material operacional de CGNAT do NIC.br/BPF.
+
+Aplicação prática no provedor. CGNAT é o tema em que suporte, NOC, engenharia e jurídico/
+atendimento a ofícios se encontram. Na prática, sua equipe precisa conseguir: identificar assinante por
+IP/porta/horário; manter NTP rigoroso; projetar armazenamento; decidir se logs vão por syslog, NetFlow
+ou ambos; e empurrar o máximo possível de tráfego para IPv6 quando disponível. O tutorial brasileiro cita
+explicitamente que, para logs de CGNAT, NetFlow tende a ser mais robusto que syslog sob alta
+simultaneidade. 96 Erros comuns. • Implantar CGNAT sem estratégia de logs. 98 • Não sincronizar
+horário/NTP da caixa e do servidor de logs. 99 • Tratar BPA como “bagunça” sem modelagem de blocos e
+sem retenção adequada. • Deixar de avançar IPv6 e condenar tudo ao caminho mais caro do CGN. 90
+
+Checklist operacional. • Confirmar uso correto de 100.64.0.0/10 só internamente.
+
+---
+
+<!-- Página 28 do PDF -->
+
+- Garantir registro de IP, porta e carimbo de tempo. 96
+- Padronizar NTP/UTC nos elementos envolvidos. 99
+- Planejar disco e retenção de logs. O treinamento cita guarda de 1 ano como referência operacional; a
+política final deve ser alinhada com exigências jurídicas e regulatórias vigentes do seu contexto. 99
+- Priorizar IPv6 onde possível. 90 Troubleshooting com passos de diagnóstico. 1. Receba do
+chamado/ofício: IP público, porta de origem, horário e fuso. 101 2. Verifique se o relógio do log server
+estava correto à época. 99 3. Consulte bloco/porta correspondente no modelo determinístico ou
+registros BPA. 96 4. Correlacione com sessão do assinante em RADIUS/BNG. 102 5. Se houver serviço
+degradado, avalie saturação do CGN, volume de logs e caminho IPv6. 96
+
+Comandos úteis em MikroTik. Em MikroTik, a construção de CGNAT determinístico costuma envolver
+geração massiva de regras e uso de netmap /cadeias específicas; o treinamento brasileiro inclusive
+referencia gerador de regras dedicado. Abaixo, alguns comandos úteis ao redor da operação - não um
+projeto CGNAT completo. 103
+/system logging action add name=remote target=remote remote=2001:db8:c0ca:c01a::2 /system logging add
+topics=firewall action=remote /ip traffic-flow set interfaces=all cache-entries=64k active-flow-
+timeout=30m /ip traffic-flow target add dst-address=2001:db8:c0ca:c01a::2 port=2055 version=IPFIX /ip
+firewall nat print /ip firewall connection print /log print Boas práticas.
+- Se puder, use IPv6 como caminho preferencial para reduzir carga de CGN.
+- Use logs robustos e data/hora corretas. 99
+- Modele port blocks com baixa ambiguidade operacional. 100
+- Lembre que CGNAT resolve escassez de IPv4, não substitui plano sério de IPv6.
+
+Resumo. CGNAT é menos um “recurso de firewall” e mais uma disciplina operacional inteira. Quem
+domina CGNAT já está olhando rede como engenheiro de provedor. 105 Perguntas de revisão com
+respostas. • Qual bloco é típico para o lado interno do CGN? 100.64.0.0/10 , reservado como shared
+address space. 92 • Quais dados mínimos ajudam a identificar um usuário atrás de CGN? IP público, porta
+e horário preciso. 96 • IPv6 passa pela caixa CGNAT? Em geral, não; ele pode seguir diretamente sem
+tradução, conforme a arquitetura do provedor. 90 Glossário. • BPA: bulk port allocation. 106 • CGN:
+carrier-grade NAT. 107 • ROTA direta IPv6: caminho sem tradução NAT44/CGNAT.
+
+---
+
+<!-- Página 29 do PDF -->
+
+## Roteamento interno e externo
+
+### Missão prática do módulo
+
+### Missão prática
+
+Monte um modelo de registro de CGNAT com campos mínimos: IP interno, IP público, porta inicial/final,
+protocolo, timestamp, timezone, equipamento e identificador do assinante.
+
+### Resumo de bolso
+
+- CGNAT normalmente usa 100.64.0.0/10.
+- Vários clientes compartilham IP público.
+- Acesso externo direto geralmente falha.
+- Logs precisam de porta e horário.
+- IPv6 reduz dependência de CGNAT.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Arquitetura IPv4 via CGNAT + logs + caminho IPv6 direto.
+
+Prompt sugerido: Crie uma arquitetura em português mostrando clientes, rede 100.64.0.0/10, caixa
+CGNAT, IP público compartilhado, servidor de logs e caminho IPv6 direto.
+
+---
+
+<!-- Página 30 do PDF -->
+
+## Módulo 6 - OSPF
+
+### Abertura com cenário real
+
+Um POP regional fica acessível por caminho alternativo. O NOC vê aumento de latência e mudança de
+rota. A causa pode ser link down, custo OSPF, vizinhança caída ou área incorreta.
+
+### Por que isso importa?
+
+Se o IGP interno está instável, BGP, MPLS e serviços passam a falhar de forma indireta. OSPF é uma das
+bases do backbone.
+
+### Nível do módulo e onde é usado
+
+Nível: Backbone inicial | NOC → Redes
+
+Onde aparece no ISP: Roteamento interno entre POPs, loopbacks de roteadores, reachability de
+BNG/borda e underlay para MPLS/BGP.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Entender que alguns problemas regionais podem vir
+Suporte
+de backbone, não do cliente final.
+
+Verificar vizinhança, área, estado, custo, LSDB,
+NOC
+rotas, flapping e logs.
+
+Desenhar áreas, sumarização, loopbacks,
+Engenharia autenticação, métricas, redundância e interação
+com MPLS.
+
+### Pergunta rápida antes de continuar
+
+Por que anunciar rotas de clientes demais dentro do OSPF pode ser ruim?
+
+Resposta esperada: Porque o IGP deve carregar infraestrutura essencial. Excesso de rotas aumenta LSDB,
+convergência e risco operacional.
+
+---
+
+<!-- Página 31 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Backbone com POP central, POPs regionais, área 0, loopbacks, LSDB e SPF.
+
+### Alerta operacional
+
+OSPF instável no underlay costuma aparecer como problema em serviços que parecem não ter relação
+direta.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. OSPF é um IGP de estado de enlace desenhado para distribuir informação de roteamento
+dentro de um único sistema autônomo. O RFC 2328 o descreve explicitamente como um link-state
+protocol para operação interna ao AS, com cada roteador mantendo uma base idêntica da topologia a
+partir da qual se calcula a árvore SPF. A documentação da MikroTik reforça que OSPF foi pensado para
+
+distribuir rotas entre roteadores do mesmo AS e destaca vantagens como atualização por mudança de
+topologia e uso de áreas. 109 Explicação didática progressiva. OSPF é o “GPS interno” do seu backbone IP.
+Em vez de trocar apenas distância, ele troca visão de enlaces e calcula o melhor caminho pelo algoritmo
+SPF. Em operação ISP, ele serve muito bem como underlay para loopbacks, next-hop de BGP e transporte
+de LDP/MPLS em topologias pequenas e médias. O risco começa quando o operador transforma OSPF em
+“depósito de tudo”: cliente, default, rotas estáticas mal redistribuídas e áreas sem planejamento. 110 A
+própria documentação da MikroTik lembra que há vantagens e custos: OSPF não sofre limitação por hop
+count como RIP e manda atualizações por mudança, mas é mais pesado em CPU/memória e mais
+complexo. Em Junos, a visão é semelhante: OSPF usa LSAs e cálculo SPF para encaminhar dentro do AS.
+
+Lista e definição de termos técnicos. • LSDB: base de estado de enlace compartilhada logicamente entre
+roteadores OSPF. 112 • SPF: shortest path first, cálculo de melhor caminho. 113 • Hello: mensagem para
+descoberta/manutenção de vizinhos. 114 • Neighbor: roteador conectado que roda OSPF na mesma
+área/interação esperada. 114 • Adjacency: relação completa para troca de informação de roteamento.
+
+---
+
+<!-- Página 32 do PDF -->
+
+114 • Area 0: backbone lógico do OSPF. 112 • NSSA / stub: tipos especiais de área suportados pelos
+vendors. 115 Exemplo real aplicado a ISP/FTTH. Imagine um provedor com POP central e vários POPs
+regionais. Os roteadores de core trocam loopbacks, redes de transporte e enlaces internos por OSPF. O
+assinante FTTH não precisa aparecer no OSPF; quem deve aparecer é a infraestrutura do provedor. Isso
+simplifica troubleshooting e evita inflar o IGP com o que deveria ficar no acesso/BNG e não no backbone.
+116 Diagrama em texto.
+flowchart LR
+A[POP Central Area 0] --- B[POP Regional 1 Area 0]
+A --- C[POP Regional 2 Area 0]
+B --- D[Loopback R1]
+C --- E[Loopback R2]
+A --- F[Borda/BGP]
+Tabela comparativa - OSPF vs IS-IS
+Tema
+
+OSPF
+
+IS-IS
+
+Natureza
+
+IGP link-state interno ao AS
+
+IGP link-state muito usado em ambientes ISP
+
+Hierarquia
+
+Áreas com backbone Area 0
+
+Nível 1 e Nível 2
+
+Unidade lógica da área
+
+Interfaces podem pertencer a áreas
+
+Em geral o roteador pertence à área
+
+Tema
+
+OSPF
+
+IS-IS
+
+Extensibilidade
+
+Evolui por extensões OSPFv2/ v3
+
+Forte uso de TLVs, alta extensibilidade
+
+Fonte: RFC 2328, documentação Junos OSPF e documentação Cisco IS-IS em ambiente ISP.
+
+Aplicação prática no provedor. Em muitos ISPs, OSPF é a primeira grande tecnologia de backbone que o
+analista de NOC aprende de verdade. Ele suporta o BGP indiretamente, porque o next-hop e as loopbacks
+precisam ser alcançáveis. Também suporta MPLS/LDP em arquiteturas comuns de backbone IP/MPLS. 118
+Erros comuns. • Colocar o acesso do assinante dentro do IGP sem necessidade. • Criar área sem desenho e
+depois “consertar no filtro”. • Redistribuir rotas em excesso. 119 • Esquecer planejamento de router-
+id/loopbacks. 120 Checklist operacional. • Definir loopbacks estáveis. 120 • Manter infraestrutura e acesso
+conceitualmente separados. • Planejar áreas antes da expansão. 122 • Usar redistribuição com parcimônia.
+119
+
+---
+
+<!-- Página 33 do PDF -->
+
+Troubleshooting com passos de diagnóstico. 1. Verificar se os vizinhos subiram. 2. Confirmar se loopbacks
+estão alcançáveis. 3. Ver se a rota ausente está no OSPF ou deveria estar em outra origem. 4. Revisar área,
+tipo de interface e filtros/redistribuição. 5. Só depois escalar para “problema de backbone”. 123 Comandos
+úteis em MikroTik.
+/routing ospf instance print /routing ospf area print /routing ospf interface-template print /routing
+ospf neighbor print /routing route print where protocol=ospf A nomenclatura acima reflete a modelagem
+RouterOS v7; em outros fabricantes, a estrutura muda bastante. 124 Boas práticas.
+- Carregar pelo OSPF apenas o que o backbone realmente precisa. 109
+- Ter loopbacks estáveis para serviços e protocolos de controle. 120
+- Manter o IGP previsível e enxuto. 125
+
+Resumo. OSPF é o início da visão de backbone. Se você entende vizinhança, LSDB e área, já deixou de
+operar rede como quem só abre chamado. 109 Perguntas de revisão com respostas. • OSPF é para dentro
+ou para fora do AS? Para dentro do AS. 109 • Por que loopbacks são importantes? Porque dão
+estabilidade a IDs e a protocolos de controle/ support services. 120 • OSPF e MPLS conversam? Sim. OSPF
+costuma prover o underlay para LDP/MPLS. 118 Glossário. • IGP: interior gateway protocol. 114 • LSA:
+anúncio de estado de enlace. 126 • SPF: algoritmo de menor caminho. 112
+
+### Missão prática do módulo
+
+### Missão prática
+
+Crie uma árvore de diagnóstico para 'vizinho OSPF não sobe': interface, área, hello/dead, autenticação,
+MTU, tipo de rede, router-id e reachability.
+
+### Resumo de bolso
+
+- OSPF é IGP link-state.
+- Área 0 é backbone.
+- Loopback estável ajuda router-id e serviços.
+- Custo influencia caminho.
+- IGP saudável sustenta BGP/MPLS.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Backbone com POP central, POPs regionais, área 0, loopbacks, LSDB e SPF.
+
+Prompt sugerido: Crie um diagrama em português de backbone ISP com POP central e POPs regionais
+em OSPF área 0, loopbacks, LSAs, Hello, LSDB e cálculo SPF.
+
+---
+
+<!-- Página 34 do PDF -->
+
+## Módulo 7 - BGP
+
+### Abertura com cenário real
+
+Clientes reclamam de latência alta para um destino específico. O link está normal, mas o caminho saiu do
+IX e passou por trânsito. A análise precisa olhar rota, AS_PATH, local-pref, communities e RPKI.
+
+### Por que isso importa?
+
+BGP é onde a rede do provedor conversa com a Internet. Erro de filtro ou anúncio pode gerar
+indisponibilidade, rota ruim ou vazamento.
+
+### Nível do módulo e onde é usado
+
+Nível: Borda/Interconexão | NOC avançado → Engenharia
+
+Onde aparece no ISP: Trânsito IP, peering, IX.br, anúncios de prefixo, escolha de saída, filtros, RPKI e
+segurança de roteamento.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Saber explicar que alguns destinos dependem de
+Suporte rota/interconexão e não só da velocidade
+contratada.
+
+Ver sessões, prefixes recebidos/anunciados, filtros,
+NOC
+next-hop, RPKI, route server e looking glass.
+
+Definir políticas de entrada/saída, communities,
+Engenharia route-reflector, prefix-limit, ROA/ROV, IRR,
+MANRS e documentação no PeeringDB.
+
+### Pergunta rápida antes de continuar
+
+BGP escolhe sempre o caminho com menor latência?
+
+Resposta esperada: Não. BGP escolhe por atributos e política. Latência pode influenciar engenharia de
+tráfego, mas não é o critério automático principal.
+
+---
+
+<!-- Página 35 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: Borda BGP com trânsito A/B, IX.br route server, cliente BGP, RPKI/ROV e communities.
+
+### Alerta operacional
+
+Nunca aceite/anuncie prefixos sem filtros, prefix-limit e política clara.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. BGP é o protocolo de roteamento entre sistemas autônomos. O RFC 4271 o define como um
+protocolo inter-AS. A documentação da MikroTik reforça que o BGP troca informação de reachability, não
+topologia, e por isso é adequado para ambientes inter-AS e políticas administrativas sofisticadas. Em redes
+ISP, BGP é a linguagem da borda: trânsito, peering, clientes, IX, route servers e políticas de
+exportação/importação. 127 Explicação didática progressiva. OSPF responde “como chego internamente”.
+BGP responde “quais prefixos eu anuncio, quais aceito e qual política aplico”. Ele opera com atributos, não
+com “menor custo puro”. Em Junos, a seleção típica considera local-preference , tamanho do AS_PATH ,
+origem, MED , preferência por eBGP sobre iBGP e depois outros critérios de desempate. Essa lógica explica
+por que um provedor pode preferir um peering ao trânsito, ou um upstream principal ao secundário,
+mesmo que o caminho físico não pareça “o menor”. 128 BGP tem duas formas principais de relação. eBGP
+é entre ASs diferentes; iBGP é dentro do mesmo AS. Cisco e Juniper documentam essa distinção
+claramente. Em redes maiores, iBGP exige ajuda de route reflectors ou confederações para evitar malhas
+completas inviáveis; a documentação da MikroTik lista suporte a route reflection, confederações,
+communities e autenticação MD5. 129 Lista e definição de termos técnicos. • ASN: identificador do
+sistema autônomo. 61 • NLRI: informação de alcançabilidade anunciada em BGP. 130 • eBGP: sessão entre
+ASs diferentes. 131 • iBGP: sessão dentro do mesmo AS. 132 • Local Preference: atributo interno de
+preferência. 133 • AS_PATH: sequência de ASNs percorridos. 134 • Community / Large Community:
+metadados de política. 135 • Route Reflector: elemento que reduz necessidade de full mesh iBGP. 136 •
+
+---
+
+<!-- Página 36 do PDF -->
+
+RPKI/ROA/ROV: infraestrutura de certificação e validação de origem de rotas. Tabela comparativa -
+eBGP vs iBGP
+
+Tema
+
+eBGP
+
+iBGP
+
+Relação
+
+Entre ASs diferentes
+
+Dentro do mesmo AS
+
+Uso típico
+
+Trânsito, peering, clientes externos
+
+Distribuição interna de rotas BGP
+
+Papel principal
+
+Interconexão
+
+Consistência de política e alcance interno
+
+Escalabilidade
+
+Sessões externas por vizinho
+
+Pode exigir route reflector/confederação
+
+Fonte: Junos BGP overview, Cisco BGP components e documentação RouterOS BGP.
+
+Exemplo real aplicado a ISP/FTTH. Um provedor regional pode ter uma sessão eBGP com o trânsito,
+outra com route servers do IX.br e iBGP entre borda e rota-refletor interno. O assinante não vê isso
+diretamente, mas sente os efeitos: menor latência via peering, mais resiliência com múltiplos caminhos e
+queda controlada quando um upstream falha. O IX.br documenta o uso de communities, filtragem de
+anúncios inválidos e validação em suas plataformas de route server. 138 Diagrama em texto.
+flowchart LR A[RR / Core iBGP] --> B[Borda 1] A --> C[Borda 2] B --> D[eBGP Trânsito] B --> E[eBGP
+IX/Route Server] C --> F[eBGP Cliente corporativo] Aplicação prática no provedor. BGP é o módulo que
+mais muda a carreira de um técnico para NOC/ engenharia. Nele você aprende que a Internet é política
+antes de ser cabo: filtro de prefixo, max-prefix, communities, preferências e validação de origem. O
+RFC 7454 e o MANRS convergem exatamente nesse ponto: proteger a sessão BGP, controlar o fluxo de
+informações por filtros e automatizar validação. 139 Erros comuns.
+- Deixar sessão aceitar tudo por padrão. No RouterOS, se a cadeia de filtro de saída não é especificada, o
+BGP aceita tudo por padrão. 140
+- Operar borda sem RPKI/ROV. 141
+- Não ter max-prefix e filtros por cliente/upstream. 142
+- Não manter contatos e política pública atualizados em bases operacionais. 52
+- Entrar em IX sem entender communities, prepend e exportação seletiva. 143 Checklist operacional.
+- Definir claramente o que entra e o que sai em cada sessão. 144
+- Habilitar validação RPKI e usar o resultado em filtros. 145
+- Ajustar communities e large communities com documentação. 146
+- Manter dados públicos no PeeringDB e contatos operacionais atualizados.
+- Aplicar ações de filtragem e anti-spoofing como base de higiene. 147
+
+---
+
+<!-- Página 37 do PDF -->
+
+Troubleshooting com passos de diagnóstico. 1. Verificar se a sessão subiu e se há conectividade TCP até o
+peer. 61 2. Confirmar remote-as , IP de vizinho e política aplicada. 148 3. Verificar quantos prefixos
+foram recebidos e quantos foram filtrados. 149 4. Analisar seleção de melhor caminho: local-pref, AS-
+path, MED, eBGP vs iBGP. 5. Em incidente de origem inválida, checar RPKI/ROA/ROV. 137
+
+Comandos úteis em MikroTik.
+/routing bgp session print
+/routing bgp connection print
+/routing route print where protocol=bgp
+/routing filter chain print
+/routing rpki print
+No RouterOS v7, BGP, filtros e RPKI ficam fortemente integrados ao subsistema de roteamento.
+
+Boas práticas. • Filtro explícito em toda sessão. 144 • RPKI/ROV sempre que possível. O RIPE NCC define
+ROA como objeto assinado que autoriza um AS a originar um prefixo; a validação resulta em estados como
+valid, invalid e not found/ unknown. 151 • Seguir MANRS para filtragem, anti-spoofing, coordenação e
+validação global. 53 • Aproveitar resources do IX.br, mas com entendimento de communities. 143 Resumo.
+BGP é política operacional codificada em rotas. Quem entende BGP começa a enxergar a Internet do
+ponto de vista do provedor, não do usuário final. 152 Perguntas de revisão com respostas. • Qual a
+diferença entre eBGP e iBGP? eBGP é entre ASs diferentes; iBGP é dentro do mesmo AS.
+
+- RPKI resolve todos os problemas de BGP? Não. Hoje ele oferece validação de origem, não validação
+completa de caminho. 153
+- Por que communities são úteis? Porque carregam política operacional sem precisar reescrever tudo na
+mão para cada rota. 154 Glossário.
+- ROA: route origin authorization. 151
+- ROV: route origin validation. 151
+- RR: route reflector. 130
+
+---
+
+<!-- Página 38 do PDF -->
+
+## Backbone e serviços avançados
+
+### Missão prática do módulo
+
+### Missão prática
+
+Monte uma política mínima de borda: prefix-list dos seus anúncios, filtro de bogons, RPKI/ROV, prefix-
+limit, communities de trânsito/IX e contatos atualizados.
+
+### Resumo de bolso
+
+- eBGP conecta AS diferentes; iBGP distribui rotas internamente.
+- Local-pref influencia saída dentro do AS.
+- AS_PATH prepend tenta influenciar entrada.
+- RPKI valida origem do anúncio.
+- PeeringDB e MANRS fazem parte da maturidade operacional.
+
+### Sugestão de imagem/print para versão diagramada
+
+### Plano visual do módulo
+
+Tipo recomendado: diagrama/fluxograma técnico ou print simulado de ferramenta.
+
+Onde inserir: abertura do módulo, antes dos termos técnicos.
+
+Problema que resolve: Borda BGP com trânsito A/B, IX.br route server, cliente BGP, RPKI/ROV e
+communities.
+
+Prompt sugerido: Crie um diagrama técnico em português com AS do ISP, bordas BGP, trânsito A/B,
+IX.br route server, cliente BGP, local-pref, AS_PATH, communities, RPKI/ROV e filtros.
+
+---
+
+<!-- Página 39 do PDF -->
+
+## Módulo 8 - MPLS
+
+### Abertura com cenário real
+
+Um cliente corporativo quer interligar matriz e filial usando o backbone do provedor. O ISP precisa
+entregar isolamento, rota correta e troubleshooting por PE/P/CE.
+
+### Por que isso importa?
+
+MPLS permite tratar o backbone como transporte de serviços, usando labels e VRFs para separar clientes
+sem criar redes físicas independentes.
+
+### Nível do módulo e onde é usado
+
+Nível: Backbone avançado | Redes → Engenharia
+
+Onde aparece no ISP: Transporte entre POPs, serviços corporativos, L2VPN/L3VPN, VRF, separação de
+clientes e backbone de operadora.
+
+### Aplicação por nível
+
+Visão O que observar
+
+Entender que cliente corporativo pode estar em
+Suporte VRF/L2VPN e que falha pode não aparecer como
+Internet comum.
+
+Verificar IGP, LDP, labels, MPLS MTU, VRF, MP-
+NOC
+BGP, RT/RD, PE/P/CE e rota de retorno.
+
+Desenhar serviços L2VPN/L3VPN, padrões de
+Engenharia RD/RT, MTU, alta disponibilidade e integração com
+BGP/IGP.
+
+### Pergunta rápida antes de continuar
+
+Se o OSPF interno não alcança loopbacks dos PEs, o MPLS funciona corretamente?
+
+Resposta esperada: Não de forma confiável. MPLS depende do underlay/IGP para alcançar loopbacks e
+formar caminhos de labels.
+
+---
+
+<!-- Página 40 do PDF -->
+
+### Diagrama visual revisado
+
+Figura didática: MPLS L3VPN com CE, PE, P, labels, VRF, RD/RT e clientes com prefixos sobrepostos.
+
+### Alerta operacional
+
+Problema de MTU em MPLS pode parecer falha aleatória de aplicação ou site que não abre.
+
+### Conteúdo técnico base preservado e reorganizado
+
+Introdução. MPLS é uma arquitetura de comutação por rótulos pensada para integrar desempenho de
+switching com flexibilidade do roteamento. O RFC 3031 define a arquitetura; o RFC 5036 define o LDP
+
+para distribuição de labels ao longo de caminhos normalmente roteados; e o RFC 4364 descreve BGP/
+MPLS IP VPNs, que permitem a provedores oferecer VPNs de camada 3 sobre um backbone compartilhado.
+Em outras palavras: MPLS é o coração de muitos backbones de serviços. 155 Explicação didática
+progressiva. Sem MPLS, um backbone IP puro encaminha olhando tabelas de rota em cada salto. Com
+MPLS, o pacote ganha labels e percorre um LSP por comutação de rótulos. Em arquitetura simples de
+provedor, o IGP anuncia loopbacks e enlaces internos; o LDP troca labels entre os LSRs; e, na borda PE,
+VRFs e MP-BGP distribuem rotas de clientes isolados. O valor didático aqui é enorme: pela primeira vez
+você separa claramente transporte e serviço. 156 A documentação da MikroTik recomenda configurar
+loopbacks nos roteadores participantes da rede MPLS para estabelecimento estável das sessões LDP.
+Também chama atenção para dois detalhes operacionais que causam muitos chamados: MPLS MTU e
+propagação de TTL. Se o propagatettl=no , os saltos internos podem ficar invisíveis ao traceroute; se o
+MPLS MTU estiver abaixo do necessário, pacotes podem ser descartados silenciosamente.
+
+Lista e definição de termos técnicos. • LSR: label switching router. 158 • LSP: label switched path. 159 •
+LDP: protocolo de distribuição de labels. 160 • PE / P / CE: provider edge, provider/core, customer edge.
+161 • VRF: tabela de roteamento virtual separada para isolar clientes/serviços. 162 • VPNv4 / MP-BGP:
+
+---
+
+<!-- Página 41 do PDF -->
+
+famílias/protocolos usados para distribuir rotas VPN entre PEs. • MPLS MTU: MTU para tráfego rotulado.
+19
+
+Exemplo real aplicado a ISP/FTTH. Um mesmo provedor pode atender dois clientes corporativos
+diferentes, ambos usando 10.0.0.0/24 , sem conflito, se cada cliente estiver numa VRF diferente e as rotas
+atravessarem o backbone MPLS de forma isolada. No RouterOS, a documentação de VRF deixa explícito
+que VRFs resolvem sobreposição de prefixos e dão a privacidade exigida por BGP-based MPLS VPNs. 163
+Diagrama em texto.
+flowchart LR
+A[CE Cliente A] --> B[PE 1 VRF-A]
+C[CE Cliente B] --> D[PE 1 VRF-B]
+B --> E[P Core MPLS]
+D --> E
+E --> F[PE 2]
+F --> G[Site Cliente A]
+F --> H[Site Cliente B]
+Aplicação prática no provedor. MPLS aparece quando o provedor deixa de ser apenas “acesso à
+Internet” e passa a entregar serviços de transporte e VPN com organização. Também aparece no
+backbone de provedores que precisam separar engenharia do serviço do cliente. Para NOC, isso muda
+o troubleshooting: agora você precisa saber se o problema é no IGP, no LDP, no label forwarding, na
+VRF ou no MP-BGP. 164
+
+Erros comuns. • Subir MPLS sem loopbacks e sem underlay estável. 165 • Ignorar MPLS MTU. 19 •
+Confiar em traceroute IP puro sem lembrar do TTL no domínio MPLS. 166 • Não perceber limitações do
+fabricante. No RouterOS, a documentação lista ausência de TE, fastreroute, proteção de link/nó e BGP
+como protocolo de distribuição de label. 167 Checklist operacional. • Loopbacks planejadas e roteáveis pelo
+IGP. 165 • Sessões LDP estáveis. 160 • MTU e MPLS MTU validados ponta a ponta. 19 • VRFs, RDs e RTs
+bem documentados quando houver L3VPN. 163 • Limitações do vendor conhecidas antes de vender serviço.
+167 Troubleshooting com passos de diagnóstico. 1. Te
