@@ -51,7 +51,7 @@ export function CommandPalette() {
                   <Command.Item
                     key={lesson.id}
                     value={lesson.title}
-                    onSelect={() => { const moduleItem = modules.find((m) => m.id === lesson.moduleId); navigateTo(`/trilha/${moduleItem?.slug ?? 'bgp-em-isp'}/aulas/${lesson.slug}`); }}
+                    onSelect={() => { const moduleItem = modules.find((m) => m.id === lesson.moduleId); if (!moduleItem) { navigateTo('/trilha'); return; } navigateTo(`/trilha/${moduleItem.slug}/aulas/${lesson.slug}`); }}
                   >
                     {lesson.title}
                   </Command.Item>
