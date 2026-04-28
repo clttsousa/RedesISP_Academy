@@ -5,6 +5,7 @@ import { LessonHeader } from '@/components/lesson/LessonHeader';
 import { LessonTabs } from '@/components/lesson/LessonTabs';
 import { GlossaryPanel } from '@/components/lesson/GlossaryPanel';
 import { NextLessonCard } from '@/components/lesson/NextLessonCard';
+import { Card } from '@/components/ui/card';
 import { getLessonNavigation, getLessonsByModuleSlug, getModuleBySlug } from '@/lib/course-navigation';
 
 export default async function LessonPage({ params }: { params: Promise<{ moduleSlug: string; lessonSlug: string }> }) {
@@ -22,12 +23,19 @@ export default async function LessonPage({ params }: { params: Promise<{ moduleS
 
   return (
     <AppShell>
-      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-        <section>
+      <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+        <section className="space-y-5">
           <LessonHeader moduleSlug={moduleSlug} lesson={lesson} module={moduleItem} prev={previousLessonSlug} next={nextLessonSlug} />
           <LessonTabs lesson={lesson} />
         </section>
-        <aside className="space-y-4"><div className="rounded-xl border bg-white p-4"><h4 className="font-semibold">Resumo da aula</h4><p className="text-sm">Tempo estimado: {lesson.estimatedMinutes} min</p></div><GlossaryPanel terms={lesson.glossaryTerms} /><NextLessonCard moduleSlug={moduleSlug} nextLessonSlug={nextLessonSlug} /></aside>
+        <aside className="space-y-4">
+          <Card variant="summary">
+            <h4 className="text-base font-semibold">Resumo da aula</h4>
+            <p className="text-sm">Tempo estimado: {lesson.estimatedMinutes} min</p>
+          </Card>
+          <GlossaryPanel terms={lesson.glossaryTerms} />
+          <NextLessonCard moduleSlug={moduleSlug} nextLessonSlug={nextLessonSlug} />
+        </aside>
       </div>
     </AppShell>
   );

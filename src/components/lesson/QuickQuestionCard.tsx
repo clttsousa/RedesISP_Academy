@@ -35,9 +35,9 @@ export function QuickQuestionCard({ question, options, correctAnswer, explanatio
   };
 
   return (
-    <Card className="space-y-3">
-      <h4 className="font-semibold">Pergunta rápida</h4>
-      <p className="text-sm text-slate-700">{question}</p>
+    <Card variant="summary" className="space-y-3">
+      <h4 className="text-lg font-semibold text-textPrimary">Pergunta rápida</h4>
+      <p className="text-sm leading-6 text-textSecondary">{question}</p>
 
       <div className="space-y-2">
         {safeOptions.map((option) => {

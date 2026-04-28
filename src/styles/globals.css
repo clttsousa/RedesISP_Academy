@@ -2,8 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-appBg text-slate-900 antialiased;
+@layer base {
+  :root {
+    --app-navy: #061b35;
+    --app-blue: #0f6bff;
+    --app-blue-soft: #eaf2ff;
+    --app-bg: #f7fafc;
+    --app-text: #0f172a;
+    --app-text-muted: #64748b;
+    --app-border: #e2e8f0;
+    --app-success: #22c55e;
+    --app-warning: #f59e0b;
+    --app-danger: #ef4444;
+  }
+
+  * {
+    @apply border-appBorder;
+  }
+
+  body {
+    @apply bg-appBg font-sans text-textPrimary antialiased;
+    line-height: 1.65;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-textPrimary;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+
+  p,
+  li {
+    @apply text-textSecondary;
+  }
+
+  code,
+  pre,
+  kbd {
+    @apply font-mono;
+    letter-spacing: 0.01em;
+  }
 }
 
-* { @apply border-slate-200; }
+@layer components {
+  .text-technical {
+    @apply font-mono text-[13px] leading-relaxed text-slate-200;
+  }
+}

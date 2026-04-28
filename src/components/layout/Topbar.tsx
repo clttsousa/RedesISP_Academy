@@ -14,9 +14,9 @@ export function Topbar() {
   const notificationCount = notifications.length;
 
   return (
-    <header className="relative flex items-center justify-between gap-3 border-b bg-white px-4 py-3 sm:px-6">
+    <header className="relative flex items-center justify-between gap-3 border-b border-appBorder bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
       <button
-        className="flex w-full max-w-2xl items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-500"
+        className="flex w-full max-w-2xl items-center gap-2 rounded-xl border border-appBorder bg-slate-50/70 px-3 py-2 text-sm text-slate-500"
         aria-label="Abrir busca"
         onClick={() => window.dispatchEvent(new CustomEvent('command-palette:toggle'))}
       >
@@ -28,7 +28,7 @@ export function Topbar() {
 
       <div className="relative hidden md:block">
         <button
-          className="relative rounded-lg border border-slate-200 p-2 text-slate-500"
+          className="relative rounded-lg border border-appBorder bg-white p-2 text-slate-500 transition hover:bg-slate-50"
           aria-label="Notificações"
           title="Notificações"
           onClick={() => setIsOpen((prev) => !prev)}
