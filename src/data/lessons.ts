@@ -21,12 +21,11 @@ type Seed = {
   alert?: string;
 };
 
-
 const buildQuestionOptions = (question: string) => [
-  `Revisar o conceito principal relacionado a: ${question}`,
-  'Ignorar a validação e seguir para a próxima etapa',
-  'Confiar apenas em impressão sem teste prático',
-  'Escalonar sem coletar evidências iniciais',
+  `Validar tecnicamente o conceito central: ${question}`,
+  'Aplicar mudança em produção antes de confirmar hipótese',
+  'Escalar sem dados de teste e sem horário de evidência',
+  'Concluir diagnóstico apenas por impressão do usuário',
 ];
 
 const buildMission = (seed: Seed) => ({
@@ -56,6 +55,11 @@ const makeLesson = (seed: Seed): Lesson => ({
     { title: 'Explicação simples', type: 'paragraph', content: seed.simple },
     { title: 'Explicação técnica', type: 'paragraph', content: seed.technical },
     { title: 'Exemplo real de ISP', type: 'paragraph', content: seed.example },
+    {
+      title: 'Resumo de bolso',
+      type: 'paragraph',
+      content: `Resumo rápido: ${seed.simple} Na operação: ${seed.technical}`,
+    },
     ...(seed.alert ? [{ title: 'Alerta operacional', type: 'alert', variant: 'alert' as const, content: seed.alert }] : []),
   ],
   diagram: seed.diagram,
@@ -65,8 +69,8 @@ const makeLesson = (seed: Seed): Lesson => ({
   quickQuestion: {
     question: seed.quickQuestion,
     options: buildQuestionOptions(seed.quickQuestion),
-    correctAnswer: `Revisar o conceito principal relacionado a: ${seed.quickQuestion}`,
-    explanation: 'A resposta correta sempre aponta para a validação técnica inicial do conceito central da aula.',
+    correctAnswer: `Validar tecnicamente o conceito central: ${seed.quickQuestion}`,
+    explanation: 'A abordagem correta começa por validação técnica objetiva antes de qualquer mudança ou escalonamento.',
   },
   glossaryTerms: seed.glossaryTerms,
   sources: seed.sources,

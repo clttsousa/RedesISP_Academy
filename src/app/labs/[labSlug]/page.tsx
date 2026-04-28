@@ -40,6 +40,11 @@ export default async function LabPage({ params }: { params: Promise<{ labSlug: s
         </div>
 
         <Card className="space-y-3">
+          <h2 className="text-xl font-semibold">Cenário</h2>
+          <p className="text-sm text-slate-700">{lab.scenario}</p>
+        </Card>
+
+        <Card className="space-y-3">
           <h2 className="text-xl font-semibold">Passo a passo</h2>
           <ol className="space-y-2">
             {lab.steps.map((step, index) => (
@@ -48,6 +53,26 @@ export default async function LabPage({ params }: { params: Promise<{ labSlug: s
               </li>
             ))}
           </ol>
+        </Card>
+
+        <Card>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Comandos sugeridos</h3>
+          <ul className="mt-2 space-y-1 font-mono text-xs text-slate-700">
+            {lab.suggestedCommands.map((command) => (
+              <li key={command} className="rounded bg-slate-50 px-2 py-1">
+                {command}
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Checklist de validação</h3>
+          <ul className="mt-2 ml-5 list-disc text-sm text-slate-700">
+            {lab.checklist.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </Card>
 
         <Card>

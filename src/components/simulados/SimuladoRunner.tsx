@@ -8,20 +8,22 @@ import { Button } from '@/components/ui/button';
 type SimuladoQuestion = {
   id: string;
   question: string;
-  answer: string;
+  options: string[];
+  correctAnswer: string;
+  explanation: string;
+  level: string;
 };
 
-const normalize = (value: string) => value.trim().toLowerCase();
-
 export function SimuladoRunner({ questions }: { questions: SimuladoQuestion[] }) {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, number>>({});
   const [isFinished, setIsFinished] = useState(false);
 
   const result = useMemo(() => {
     const graded = questions.map((question) => {
-      const userAnswer = answers[question.id] ?? '';
-      const correct = normalize(userAnswer) === normalize(question.answer);
-      return { ...question, userAnswer, correct };
+      const userAnswer = answers[question.id];
+      const selectedOption = typeof userAnswer === 'number' ? question.options[userAnswer] : '';
+      const correct = selectedOption === question.correctAnswer;
+      return { ...question, userAnswer, selectedOption, correct };
     });
 
     const correctCount = graded.filter((item) => item.correct).length;
@@ -33,12 +35,12 @@ export function SimuladoRunner({ questions }: { questions: SimuladoQuestion[] })
       score,
       reviewPoints: graded
         .filter((item) => !item.correct)
-        .map((item) => `Revisar: "${item.question}" (resposta esperada: ${item.answer}).`),
+        .map((item) => `Revisar: "${item.question}" (resposta esperada: ${item.correctAnswer}).`),
     };
   }, [answers, questions]);
 
   const finishExam = () => {
-    const unanswered = questions.filter((question) => !answers[question.id]?.trim());
+    const unanswered = questions.filter((question) => typeof answers[question.id] !== 'number');
     if (unanswered.length > 0) {
       toast.warning(`Você ainda tem ${unanswered.length} pergunta(s) sem resposta.`);
       return;
@@ -58,14 +60,25 @@ export function SimuladoRunner({ questions }: { questions: SimuladoQuestion[] })
               <p className="font-medium text-slate-900">
                 {index + 1}. {question.question}
               </p>
-              <textarea
-                value={answers[question.id] ?? ''}
-                onChange={(event) => setAnswers((prev) => ({ ...prev, [question.id]: event.target.value }))}
-                placeholder="Digite sua resposta"
-                disabled={isFinished}
-                className="mt-3 w-full rounded-lg border px-3 py-2 text-sm"
-                rows={3}
-              />
+              <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">Nível: {question.level}</p>
+              <div className="mt-3 space-y-2">
+                {question.options.map((option, optionIndex) => {
+                  const checked = answers[question.id] === optionIndex;
+                  return (
+                    <label key={option} className={`flex cursor-pointer items-start gap-2 rounded-lg border px-3 py-2 text-sm ${checked ? 'border-primaryBlue bg-blue-50' : 'border-slate-200 bg-white'}`}>
+                      <input
+                        type="radio"
+                        name={question.id}
+                        checked={checked}
+                        onChange={() => setAnswers((prev) => ({ ...prev, [question.id]: optionIndex }))}
+                        disabled={isFinished}
+                        className="mt-0.5"
+                      />
+                      <span>{option}</span>
+                    </label>
+                  );
+                })}
+              </div>
             </li>
           ))}
         </ol>
@@ -86,13 +99,13 @@ export function SimuladoRunner({ questions }: { questions: SimuladoQuestion[] })
               <div key={item.id} className={`rounded-lg border p-3 text-sm ${item.correct ? 'border-emerald-300 bg-emerald-50' : 'border-rose-300 bg-rose-50'}`}>
                 <p className="font-medium">{item.question}</p>
                 <p className="mt-1">
-                  <strong>Sua resposta:</strong> {item.userAnswer || '—'}
+                  <strong>Sua resposta:</strong> {item.selectedOption || '—'}
                 </p>
                 <p>
-                  <strong>Gabarito:</strong> {item.answer}
+                  <strong>Gabarito:</strong> {item.correctAnswer}
                 </p>
                 <p className="text-slate-700">
-                  <strong>Explicação:</strong> A resposta correta resume o ponto-chave operacional que deve ser validado neste cenário.
+                  <strong>Explicação:</strong> {item.explanation}
                 </p>
               </div>
             ))}
