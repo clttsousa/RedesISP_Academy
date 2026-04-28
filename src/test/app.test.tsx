@@ -4,6 +4,17 @@ import LessonPage from '@/app/trilha/[moduleSlug]/aulas/[lessonSlug]/page';
 import { LessonHeader } from '@/components/lesson/LessonHeader';
 import { CommandBlock } from '@/components/lesson/CommandBlock';
 import { CommandPalette } from '@/components/search/CommandPalette';
+import { lessons } from '@/data/lessons';
+
+const pushMock = vi.fn();
+
+vi.mock('next/navigation', async () => {
+  const actual = await vi.importActual('next/navigation');
+  return {
+    ...actual,
+    useRouter: () => ({ push: pushMock }),
+  };
+});
 
 describe('pages', () => {
   it('renderiza /trilha', () => {
@@ -18,7 +29,7 @@ describe('pages', () => {
   });
 
   it('clique em marcar concluída', () => {
-    render(<LessonHeader lessonSlug="ebgp-ibgp-politicas" next="bgp-comunidades" prev="bgp-filtros" />);
+    render(<LessonHeader moduleSlug="bgp-em-isp" lesson={lessons[0]} next="bgp-comunidades" prev="bgp-filtros" />);
     fireEvent.click(screen.getByText('Marcar como concluída'));
     expect(screen.getByText('Marcar como concluída')).toBeInTheDocument();
   });
@@ -33,5 +44,6 @@ describe('pages', () => {
   it('abre command palette com ctrl+k', () => {
     render(<CommandPalette />);
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+    expect(screen.getByPlaceholderText('Buscar módulo, aula, termo, comando ou lab...')).toBeInTheDocument();
   });
 });
