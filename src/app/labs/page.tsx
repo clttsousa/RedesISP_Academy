@@ -77,7 +77,7 @@ export default function LabsPage() {
 
         <div className="grid gap-4 lg:grid-cols-2">
           {filteredLabs.map((lab) => (
-            <Card key={lab.id} className="space-y-3">
+            <Card key={lab.id} className="space-y-3" clickable>
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <h2 className="text-lg font-semibold text-slate-900">{lab.title}</h2>

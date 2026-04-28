@@ -54,7 +54,7 @@ export default function SimuladosPage() {
 
         <div className="grid gap-4 lg:grid-cols-2">
           {filtered.map((simulado) => (
-            <Card key={simulado.id} className="space-y-3">
+            <Card key={simulado.id} className="space-y-3" clickable>
               <h2 className="text-lg font-semibold">{simulado.moduleTitle}</h2>
               <p className="text-sm text-slate-500">{simulado.level}</p>
               <div className="flex items-center justify-between text-sm text-slate-600">

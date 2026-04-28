@@ -10,7 +10,7 @@ type ModuleCardProps = {
 
 export function ModuleCard({ module, continueHref }: ModuleCardProps) {
   return (
-    <Card variant="action">
+    <Card variant="action" clickable>
       <h3 className="text-sm font-semibold uppercase tracking-wide text-primaryBlue">Módulo atual</h3>
       <p className="mt-1 text-xl font-semibold text-textPrimary">{module.title}</p>
       <p className="text-sm leading-6 text-textSecondary">{module.description}</p>

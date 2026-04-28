@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { useProgressStore } from '@/store/progress-store';
 import { toast } from 'sonner';
@@ -18,6 +19,7 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
   const completeMission = useProgressStore((state) => state.completeMission);
   const completedMissions = useProgressStore((state) => state.completedMissions);
   const isMissionCompleted = completedMissions.includes(lessonSlug);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen && open && !isMissionCompleted) {
@@ -34,7 +36,11 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
   };
 
   return (
-    <div className={`rounded-2xl border p-5 shadow-sm ${isMissionCompleted ? 'border-emerald-300 bg-emerald-50/80' : 'border-appBorder bg-white'}`}>
+    <motion.div
+      animate={isMissionCompleted && !shouldReduceMotion ? { boxShadow: ['0 0 0 rgba(16,185,129,0)', '0 0 0 8px rgba(16,185,129,0.08)', '0 0 0 rgba(16,185,129,0)'] } : undefined}
+      transition={{ duration: 0.45 }}
+      className={`rounded-2xl border p-5 shadow-sm ${isMissionCompleted ? 'border-emerald-300 bg-emerald-50/80' : 'border-appBorder bg-white'}`}
+    >
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <h4 className="text-lg font-semibold">{mission.title}</h4>
@@ -46,17 +52,19 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
 
       <Dialog.Root open={open} onOpenChange={handleOpenChange}>
         <Dialog.Trigger asChild>
-          <Button>{isMissionCompleted ? 'Revisar missão' : 'Iniciar missão'}</Button>
+          <motion.div whileHover={shouldReduceMotion ? undefined : { scale: 1.01 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}>
+            <Button>{isMissionCompleted ? 'Revisar missão' : 'Iniciar missão'}</Button>
+          </motion.div>
         </Dialog.Trigger>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/40" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-appBorder bg-white p-6 shadow-2xl">
+          <Dialog.Overlay className="fixed inset-0 bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 w-[92vw] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-appBorder bg-white p-6 shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out">
             <div className="flex items-start justify-between gap-3">
               <Dialog.Title className="text-lg font-semibold">{mission.title}</Dialog.Title>
               <Dialog.Close asChild>
-                <button aria-label="Fechar missão" className="rounded-md border p-1 text-slate-500 hover:bg-slate-50">
+                <motion.button whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }} aria-label="Fechar missão" className="rounded-md border p-1 text-slate-500 hover:bg-slate-50">
                   <X size={16} />
-                </button>
+                </motion.button>
               </Dialog.Close>
             </div>
 
@@ -103,13 +111,19 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
 
             <div className="mt-6 flex justify-end gap-2">
               <Dialog.Close asChild>
-                <Button className="bg-slate-600 hover:bg-slate-700">Cancelar</Button>
+                <motion.div whileHover={shouldReduceMotion ? undefined : { scale: 1.01 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}>
+                  <Button className="bg-slate-600 hover:bg-slate-700">Cancelar</Button>
+                </motion.div>
               </Dialog.Close>
-              {!isMissionCompleted ? <Button onClick={concludeMission}>Concluir missão</Button> : null}
+              {!isMissionCompleted ? (
+                <motion.div whileHover={shouldReduceMotion ? undefined : { scale: 1.01 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}>
+                  <Button onClick={concludeMission}>Concluir missão</Button>
+                </motion.div>
+              ) : null}
             </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-    </div>
+    </motion.div>
   );
 }

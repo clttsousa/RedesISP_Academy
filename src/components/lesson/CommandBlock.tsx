@@ -2,24 +2,26 @@
 
 import { useState } from 'react';
 import { Check, Copy, TerminalSquare } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 export function CommandBlock({ commands }: { commands: string[] }) {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const copyToClipboard = async (content: string, key: string) => {
     await navigator.clipboard.writeText(content);
     setCopiedCommand(key);
-    toast.success('Comando copiado');
+    toast.success('Comando copiado', { duration: 1400 });
     window.setTimeout(() => setCopiedCommand(null), 1800);
   };
 
   const copyAll = async () => {
     await navigator.clipboard.writeText(commands.join('\n'));
     setCopiedAll(true);
-    toast.success('Comandos copiados');
+    toast.success('Comandos copiados', { duration: 1400 });
     window.setTimeout(() => setCopiedAll(false), 1800);
   };
 
@@ -35,7 +37,16 @@ export function CommandBlock({ commands }: { commands: string[] }) {
             className="inline-flex items-center gap-1.5 rounded-md border border-slate-600 px-2 py-1 text-[11px] text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
             onClick={copyAll}
           >
-            {copiedAll ? <Check size={13} /> : <Copy size={13} />}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={copiedAll ? 'done' : 'copy'}
+                initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.9 }}
+              >
+                {copiedAll ? <Check size={13} /> : <Copy size={13} />}
+              </motion.span>
+            </AnimatePresence>
             {copiedAll ? 'Copiado' : 'Copiar todos'}
           </button>
         ) : null}
@@ -57,7 +68,19 @@ export function CommandBlock({ commands }: { commands: string[] }) {
                 void copyToClipboard(command, command);
               }}
             >
-              <span className="inline-flex items-center gap-1.5">{isCopied ? <Check size={13} /> : <Copy size={13} />}{isCopied ? 'Copiado' : 'Copiar'}</span>
+              <span className="inline-flex items-center gap-1.5">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={isCopied ? 'done' : 'copy'}
+                    initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.9 }}
+                  >
+                    {isCopied ? <Check size={13} /> : <Copy size={13} />}
+                  </motion.span>
+                </AnimatePresence>
+                {isCopied ? 'Copiado' : 'Copiar'}
+              </span>
             </button>
           </div>
         );

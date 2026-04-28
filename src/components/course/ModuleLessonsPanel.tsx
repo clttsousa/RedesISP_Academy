@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import type { Module } from '@/lib/types';
 import { getLessonsByModuleSlug, getModuleContinueLessonHref } from '@/lib/course-navigation';
 import { useProgressStore } from '@/store/progress-store';
+import { Progress } from '@/components/ui/progress';
+import { getModuleProgress } from '@/lib/progress';
 
 export function ModuleLessonsPanel({ module }: { module: Module }) {
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const continueHref = getModuleContinueLessonHref(module.slug, completedLessons);
   const lessons = getLessonsByModuleSlug(module.slug);
+  const moduleProgress = getModuleProgress(module.slug, completedLessons);
 
   return (
     <>
@@ -25,6 +28,13 @@ export function ModuleLessonsPanel({ module }: { module: Module }) {
 
       <section className="rounded-2xl border bg-white p-5">
         <h3 className="mb-3 text-xl font-semibold">Aulas do módulo</h3>
+        <div className="mb-4 space-y-2">
+          <div className="flex items-center justify-between text-xs text-slate-500">
+            <span>Progresso do módulo</span>
+            <span>{moduleProgress.percentage}%</span>
+          </div>
+          <Progress value={moduleProgress.percentage} />
+        </div>
         <div className="space-y-2">
           {lessons.map((lesson, index) => {
             const isCompleted = completedLessons.includes(lesson.slug);
