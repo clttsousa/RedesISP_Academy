@@ -1,3 +1,20 @@
 export const quizzes = [
-  { id: 'quiz-bgp-1', moduleSlug: 'bgp-em-isp', question: 'Qual protocolo é usado entre AS diferentes?', answer: 'eBGP' }
+  { id: 'quiz-redes-1', moduleSlug: 'redes-de-computadores', question: 'Se ping por IP funciona e por nome falha, qual hipótese inicial?', answer: 'Problema de DNS.' },
+  { id: 'quiz-redes-2', moduleSlug: 'redes-de-computadores', question: 'Qual recurso é afetado por bloqueio indevido de ICMP Fragmentation Needed?', answer: 'Path MTU Discovery.' },
+  { id: 'quiz-isp-1', moduleSlug: 'fundamentos-rede-isp', question: 'Qual elemento concentra sessões PPPoE?', answer: 'BNG.' },
+  { id: 'quiz-isp-2', moduleSlug: 'fundamentos-rede-isp', question: 'Peering serve para quê no ISP?', answer: 'Troca direta de tráfego entre redes, reduzindo custo/latência em muitos casos.' },
+  { id: 'quiz-dns-1', moduleSlug: 'dns', question: 'Quem normalmente consulta raiz e TLD na resolução recursiva?', answer: 'O resolvedor recursivo.' },
+  { id: 'quiz-dns-2', moduleSlug: 'dns', question: 'DNSSEC protege confidencialidade do tráfego?', answer: 'Não; protege integridade/autenticidade da resposta.' },
+  { id: 'quiz-nat-1', moduleSlug: 'nat', question: 'Qual tipo de NAT publica serviço interno para internet?', answer: 'dstnat (port forwarding).' },
+  { id: 'quiz-nat-2', moduleSlug: 'nat', question: 'Conntrack é importante para quê?', answer: 'Controlar estado das conexões e retorno correto do tráfego.' },
+  { id: 'quiz-cgnat-1', moduleSlug: 'cgnat', question: 'Qual bloco é reservado para endereçamento compartilhado de CGNAT?', answer: '100.64.0.0/10.' },
+  { id: 'quiz-cgnat-2', moduleSlug: 'cgnat', question: 'Quais dados mínimos para correlação de CGNAT?', answer: 'IP público, porta, protocolo e horário preciso.' },
+  { id: 'quiz-ospf-1', moduleSlug: 'ospf', question: 'Qual algoritmo o OSPF usa para calcular rotas?', answer: 'SPF (Dijkstra).' },
+  { id: 'quiz-ospf-2', moduleSlug: 'ospf', question: 'Qual área é o backbone do OSPF?', answer: 'Área 0.' },
+  { id: 'quiz-bgp-1', moduleSlug: 'bgp', question: 'eBGP ocorre entre quais domínios?', answer: 'Entre AS diferentes.' },
+  { id: 'quiz-bgp-2', moduleSlug: 'bgp', question: 'RPKI valida origem ou caminho completo?', answer: 'Origem do prefixo (não caminho completo).' },
+  { id: 'quiz-mpls-1', moduleSlug: 'mpls', question: 'Qual protocolo distribui labels no cenário clássico MPLS?', answer: 'LDP.' },
+  { id: 'quiz-mpls-2', moduleSlug: 'mpls', question: 'Qual recurso isola rotas de clientes no PE?', answer: 'VRF.' },
+  { id: 'quiz-moni-1', moduleSlug: 'monitoramento-isp', question: 'Qual protocolo clássico de coleta de métricas de interface?', answer: 'SNMP.' },
+  { id: 'quiz-moni-2', moduleSlug: 'monitoramento-isp', question: 'Para que serve flow/IPFIX no NOC?', answer: 'Entender comportamento de tráfego e capacidade.' },
 ];

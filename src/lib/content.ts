@@ -1,1 +1,1 @@
-export const contentTodo = 'TODO: completar extração integral da apostila para todos os módulos.';
+export const contentTodo = 'Conteúdo da trilha preenchido com base na apostila em codex_export/content/apostila-redes-isp.md.';
