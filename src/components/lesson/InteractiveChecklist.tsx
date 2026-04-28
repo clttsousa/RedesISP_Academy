@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 export function InteractiveChecklist({ items }: { items: string[] }) {
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
@@ -26,9 +27,7 @@ export function InteractiveChecklist({ items }: { items: string[] }) {
       <p className="text-sm text-slate-600">
         {progress.completed} de {progress.total} itens concluídos
       </p>
-      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full bg-primaryBlue transition-all" style={{ width: `${progress.percentage}%` }} />
-      </div>
+      <Progress value={progress.percentage} />
 
       <ul className="space-y-2">
         {items.map((item) => {

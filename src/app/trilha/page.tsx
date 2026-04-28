@@ -8,6 +8,7 @@ import { getModuleContinueLessonHref } from '@/lib/course-navigation';
 import { ReactNode } from 'react';
 import { useProgressStore } from '@/store/progress-store';
 import { getFirstIncompleteModuleSlug, getModuleProgress, getOverallProgress } from '@/lib/progress';
+import { Progress } from '@/components/ui/progress';
 
 export default function TrilhaPage() {
   const completedLessons = useProgressStore((state) => state.completedLessons);
@@ -39,8 +40,8 @@ export default function TrilhaPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-600">Progresso da trilha</p>
-                <div className="mt-2 h-2 rounded-full bg-slate-200">
-                  <div className="h-2 rounded-full bg-primaryBlue" style={{ width: `${overallProgress}%` }} />
+                <div className="mt-2">
+                  <Progress value={overallProgress} />
                 </div>
                 <p className="mt-2 text-2xl font-bold text-slate-900">{overallProgress}%</p>
               </div>
@@ -136,7 +137,7 @@ show interface status\nshow ip route\nshow bgp summary
 
 function Card({ icon, title, body }: { icon: ReactNode; title: string; body: string }) {
   return (
-    <div className="rounded-2xl border p-4">
+    <div className="rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card">
       <h4 className="mb-2 flex items-center gap-2 text-lg font-semibold text-slate-900">
         {icon} {title}
       </h4>

@@ -8,6 +8,7 @@ import { CheckCircle2, Circle, Clock3 } from 'lucide-react';
 import { useProgressStore } from '@/store/progress-store';
 import { getModuleProgress, getModuleStatus, getOverallProgress } from '@/lib/progress';
 import { getLessonsByModuleSlug } from '@/lib/course-navigation';
+import { Progress } from '@/components/ui/progress';
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -30,9 +31,7 @@ export function AppSidebar() {
           <span className="text-slate-300">Progresso geral</span>
           <span className="font-semibold text-white">{overallProgress}%</span>
         </div>
-        <div className="h-2 rounded-full bg-white/20">
-          <div className="h-2 rounded-full bg-primaryBlue" style={{ width: `${overallProgress}%` }} />
-        </div>
+        <Progress value={overallProgress} />
       </div>
 
       <p className="mb-3 text-xs uppercase tracking-[0.14em] text-slate-300">Módulos da trilha</p>

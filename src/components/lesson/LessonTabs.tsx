@@ -1,7 +1,7 @@
 'use client';
 
 import * as Tabs from '@radix-ui/react-tabs';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { BookOpenText, Code2, Network, FlaskConical, GraduationCap } from 'lucide-react';
 import { ContentSection } from './ContentSection';
 import { InfoBox } from './InfoBox';
@@ -25,6 +25,8 @@ const tabItems = [
 
 export function LessonTabs({ lesson }: { lesson: Lesson }) {
   const [activeTab, setActiveTab] = useState<(typeof tabItems)[number]['value']>('conteudo');
+  const shouldReduceMotion = useReducedMotion();
+  const tabTransition = shouldReduceMotion ? { duration: 0 } : { duration: 0.25, ease: 'easeOut' };
 
   return (
     <Tabs.Root defaultValue="conteudo" value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="mt-6">
@@ -51,7 +53,13 @@ export function LessonTabs({ lesson }: { lesson: Lesson }) {
       </Tabs.List>
 
       <Tabs.Content value="conteudo">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+        <motion.div
+          key="conteudo"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={tabTransition}
+          className="space-y-4"
+        >
           {lesson.sections.map((s) =>
             s.variant === 'info' ? (
               <InfoBox key={s.title} title={s.title} content={s.content} />
@@ -76,21 +84,29 @@ export function LessonTabs({ lesson }: { lesson: Lesson }) {
         </motion.div>
       </Tabs.Content>
       <Tabs.Content value="diagrama">
-        <NetworkDiagram />
+        <motion.div key="diagrama" initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={tabTransition}>
+          <NetworkDiagram />
+        </motion.div>
       </Tabs.Content>
       <Tabs.Content value="exemplo">
-        <ContentSection title="Exemplo real" content={lesson.sections.find((s) => s.title.includes('Exemplo'))?.content ?? 'Sem exemplo disponível.'} />
+        <motion.div key="exemplo" initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={tabTransition}>
+          <ContentSection title="Exemplo real" content={lesson.sections.find((s) => s.title.includes('Exemplo'))?.content ?? 'Sem exemplo disponível.'} />
+        </motion.div>
       </Tabs.Content>
       <Tabs.Content value="comandos">
-        <CommandBlock commands={lesson.commands} />
+        <motion.div key="comandos" initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={tabTransition}>
+          <CommandBlock commands={lesson.commands} />
+        </motion.div>
       </Tabs.Content>
       <Tabs.Content value="quiz">
-        <QuickQuestionCard
-          question={lesson.quickQuestion.question}
-          options={lesson.quickQuestion.options}
-          correctAnswer={lesson.quickQuestion.correctAnswer}
-          explanation={lesson.quickQuestion.explanation}
-        />
+        <motion.div key="quiz" initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={tabTransition}>
+          <QuickQuestionCard
+            question={lesson.quickQuestion.question}
+            options={lesson.quickQuestion.options}
+            correctAnswer={lesson.quickQuestion.correctAnswer}
+            explanation={lesson.quickQuestion.explanation}
+          />
+        </motion.div>
       </Tabs.Content>
     </Tabs.Root>
   );

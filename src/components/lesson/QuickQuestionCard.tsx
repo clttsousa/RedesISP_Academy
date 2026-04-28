@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ type QuickQuestionCardProps = {
 export function QuickQuestionCard({ question, options, correctAnswer, explanation }: QuickQuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const isCorrect = selectedOption === correctAnswer;
   const safeOptions = useMemo(() => Array.from(new Set(options)).filter(Boolean), [options]);
@@ -29,11 +31,6 @@ export function QuickQuestionCard({ question, options, correctAnswer, explanatio
     toast[isCorrect ? 'success' : 'error'](isCorrect ? 'Resposta correta!' : 'Resposta incorreta.');
   };
 
-  const handleReset = () => {
-    setSelectedOption(null);
-    setHasAnswered(false);
-  };
-
   return (
     <Card variant="summary" className="space-y-3">
       <h4 className="text-lg font-semibold text-textPrimary">Pergunta rápida</h4>
@@ -45,8 +42,11 @@ export function QuickQuestionCard({ question, options, correctAnswer, explanatio
           const isCorrectOption = option === correctAnswer;
 
           return (
-            <label
+            <motion.label
               key={option}
+              whileTap={hasAnswered || shouldReduceMotion ? undefined : { scale: 0.99 }}
+              animate={isSelected && !shouldReduceMotion ? { scale: [1, 1.01, 1] } : undefined}
+              transition={{ duration: 0.2 }}
               className={[
                 'flex cursor-pointer items-start gap-2 rounded-lg border p-2 text-sm transition',
                 isSelected ? 'border-primaryBlue bg-blue-50' : 'border-slate-200 bg-white',
@@ -64,7 +64,7 @@ export function QuickQuestionCard({ question, options, correctAnswer, explanatio
                 className="mt-0.5"
               />
               <span>{option}</span>
-            </label>
+            </motion.label>
           );
         })}
       </div>
@@ -74,11 +74,18 @@ export function QuickQuestionCard({ question, options, correctAnswer, explanatio
       ) : (
         <div className="space-y-3">
           <p className={`text-sm font-semibold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>{isCorrect ? '✅ Você acertou.' : '❌ Você errou.'}</p>
-          <p className="text-sm text-slate-700">
-            <strong>Explicação:</strong> {explanation}
-          </p>
-          <Button className="bg-slate-700" onClick={handleReset}>
-            Tentar novamente
+          <AnimatePresence initial={false}>
+            <motion.p
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
+              className="text-sm text-slate-700"
+            >
+              <strong>Explicação:</strong> {explanation}
+            </motion.p>
+          </AnimatePresence>
+          <Button className="bg-slate-700" disabled>
+            Respondido
           </Button>
         </div>
       )}
