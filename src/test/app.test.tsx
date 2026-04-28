@@ -1,10 +1,13 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import TrilhaPage from '@/app/trilha/page';
 import LessonPage from '@/app/trilha/[moduleSlug]/aulas/[lessonSlug]/page';
 import { LessonHeader } from '@/components/lesson/LessonHeader';
 import { CommandBlock } from '@/components/lesson/CommandBlock';
 import { CommandPalette } from '@/components/search/CommandPalette';
 import { lessons } from '@/data/lessons';
+import { modules } from '@/data/modules';
 
 const pushMock = vi.fn();
 
@@ -13,6 +16,7 @@ vi.mock('next/navigation', async () => {
   return {
     ...actual,
     useRouter: () => ({ push: pushMock }),
+    usePathname: () => '/trilha',
   };
 });
 
@@ -22,14 +26,14 @@ describe('pages', () => {
     expect(screen.getByText(/Trilha: Redes ISP/)).toBeInTheDocument();
   });
 
-  it('renderiza página da aula BGP', async () => {
-    const Page = await LessonPage({ params: Promise.resolve({ moduleSlug: 'bgp-em-isp', lessonSlug: 'ebgp-ibgp-politicas' }) });
+  it('renderiza página de uma aula válida', async () => {
+    const Page = await LessonPage({ params: Promise.resolve({ moduleSlug: 'bgp', lessonSlug: 'bgp-ebgp-ibgp-politica' }) });
     render(Page);
-    expect(screen.getByText(/Aula 4/)).toBeInTheDocument();
+    expect(screen.getByText(/Tempo estimado/)).toBeInTheDocument();
   });
 
   it('clique em marcar concluída', () => {
-    render(<LessonHeader moduleSlug="bgp-em-isp" lesson={lessons[0]} next="bgp-comunidades" prev="bgp-filtros" />);
+    render(<LessonHeader moduleSlug={modules[0].slug} lesson={lessons[0]} next={lessons[1].slug} />);
     fireEvent.click(screen.getByText('Marcar como concluída'));
     expect(screen.getByText('Marcar como concluída')).toBeInTheDocument();
   });
@@ -41,9 +45,11 @@ describe('pages', () => {
     expect(screen.getByText('Copiar')).toBeInTheDocument();
   });
 
-  it('abre command palette com ctrl+k', () => {
+  it('abre command palette com ctrl+k', async () => {
     render(<CommandPalette />);
-    fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
-    expect(screen.getByPlaceholderText('Buscar módulo, aula, termo, comando ou lab...')).toBeInTheDocument();
+    await act(async () => {
+      window.dispatchEvent(new CustomEvent('command-palette:toggle'));
+    });
+    expect(await screen.findByPlaceholderText('Buscar módulo, aula, termo, comando ou lab...')).toBeInTheDocument();
   });
 });

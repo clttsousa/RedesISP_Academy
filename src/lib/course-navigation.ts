@@ -1,5 +1,6 @@
 import { lessons } from '@/data/lessons';
 import { modules } from '@/data/modules';
+import { getSafeCompletedLessons } from '@/lib/progress';
 
 export function getModuleBySlug(moduleSlug: string) {
   return modules.find((moduleItem) => moduleItem.slug === moduleSlug);
@@ -25,7 +26,14 @@ export function getLessonsByModuleSlug(moduleSlug: string) {
 
 export function getLessonInModule(moduleSlug: string, lessonSlug: string) {
   if (!lessonBelongsToModule(moduleSlug, lessonSlug)) return null;
-  return lessons.find((lesson) => lesson.slug === lessonSlug) ?? null;
+
+  const lesson = lessons.find((lessonItem) => lessonItem.slug === lessonSlug);
+  if (!lesson) return null;
+
+  const moduleItem = getModuleBySlug(moduleSlug);
+  if (!moduleItem) return null;
+
+  return lesson.moduleId === moduleItem.id ? lesson : null;
 }
 
 export function getLessonNavigation(moduleSlug: string, lessonSlug: string) {
@@ -42,9 +50,20 @@ export function getLessonNavigation(moduleSlug: string, lessonSlug: string) {
   };
 }
 
-export function getModuleContinueLessonHref(moduleSlug: string) {
-  const nextLesson = getLessonsByModuleSlug(moduleSlug)[0];
-  if (!nextLesson) return `/trilha/${moduleSlug}`;
+export function getModuleContinueLessonHref(moduleSlug: string, completedLessons: string[] = []) {
+  const moduleLessons = getLessonsByModuleSlug(moduleSlug);
 
-  return `/trilha/${moduleSlug}/aulas/${nextLesson.slug}`;
+  if (moduleLessons.length === 0) {
+    return `/trilha/${moduleSlug}`;
+  }
+
+  const completed = new Set(getSafeCompletedLessons(completedLessons));
+  const firstIncompleteLesson = moduleLessons.find((lesson) => !completed.has(lesson.slug));
+
+  if (firstIncompleteLesson) {
+    return `/trilha/${moduleSlug}/aulas/${firstIncompleteLesson.slug}`;
+  }
+
+  const lastLesson = moduleLessons[moduleLessons.length - 1];
+  return `/trilha/${moduleSlug}/aulas/${lastLesson.slug}`;
 }
