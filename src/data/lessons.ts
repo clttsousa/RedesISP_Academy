@@ -21,6 +21,28 @@ type Seed = {
   alert?: string;
 };
 
+
+const buildQuestionOptions = (question: string) => [
+  `Revisar o conceito principal relacionado a: ${question}`,
+  'Ignorar a validação e seguir para a próxima etapa',
+  'Confiar apenas em impressão sem teste prático',
+  'Escalonar sem coletar evidências iniciais',
+];
+
+const buildMission = (seed: Seed) => ({
+  title: `Missão prática — ${seed.title}`,
+  objective: seed.mission,
+  steps: [
+    'Mapear o cenário atual e identificar pré-requisitos.',
+    'Executar os testes sugeridos em sequência lógica.',
+    'Registrar evidências objetivas (saída, horário e impacto).',
+    'Consolidar conclusão e próximos passos operacionais.',
+  ],
+  suggestedCommands: seed.commands,
+  checklist: seed.checklist,
+  expectedResult: 'Checklist validado, evidências registradas e conclusão pronta para handoff técnico.',
+});
+
 const makeLesson = (seed: Seed): Lesson => ({
   id: seed.id,
   moduleId: seed.moduleId,
@@ -39,8 +61,13 @@ const makeLesson = (seed: Seed): Lesson => ({
   diagram: seed.diagram,
   commands: seed.commands,
   checklist: seed.checklist,
-  mission: seed.mission,
-  quickQuestion: seed.quickQuestion,
+  mission: buildMission(seed),
+  quickQuestion: {
+    question: seed.quickQuestion,
+    options: buildQuestionOptions(seed.quickQuestion),
+    correctAnswer: `Revisar o conceito principal relacionado a: ${seed.quickQuestion}`,
+    explanation: 'A resposta correta sempre aponta para a validação técnica inicial do conceito central da aula.',
+  },
   glossaryTerms: seed.glossaryTerms,
   sources: seed.sources,
 });

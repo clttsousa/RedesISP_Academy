@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { Card } from '@/components/ui/card';
 import { findSimulado, simulados } from '@/lib/simulados';
+import { SimuladoRunner } from '@/components/simulados/SimuladoRunner';
 
 export default async function SimuladoPage({ params }: { params: Promise<{ simuladoSlug: string }> }) {
   const { simuladoSlug } = await params;
@@ -34,17 +35,7 @@ export default async function SimuladoPage({ params }: { params: Promise<{ simul
           </Card>
         </div>
 
-        <Card className="space-y-4">
-          <h2 className="text-xl font-semibold">Perguntas e gabarito</h2>
-          <ol className="space-y-3">
-            {simulado.questions.map((question, index) => (
-              <li key={question.id} className="rounded-xl border bg-slate-50 p-4">
-                <p className="font-medium text-slate-900">{index + 1}. {question.question}</p>
-                <p className="mt-2 text-sm text-slate-600"><strong>Resposta:</strong> {question.answer}</p>
-              </li>
-            ))}
-          </ol>
-        </Card>
+        <SimuladoRunner questions={simulado.questions} />
 
         <Card>
           <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Outros simulados</h3>
