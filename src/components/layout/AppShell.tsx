@@ -5,11 +5,11 @@ import { CommandPalette } from '@/components/search/CommandPalette';
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="min-h-screen bg-appBg lg:flex">
       <AppSidebar />
-      <div className="flex-1">
+      <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />
-        <main className="p-6">{children}</main>
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
       <CommandPalette />
     </div>
