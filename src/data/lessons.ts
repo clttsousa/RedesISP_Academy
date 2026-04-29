@@ -17,16 +17,77 @@ type Seed = {
   checklist: string[];
   glossaryTerms: string[];
   sources: string[];
+  objective?: string;
+  prerequisites?: string[];
+  openingScenario?: string;
   why: string;
   simple: string;
   technical: string;
+  technicalTerms?: string[];
   example: string;
+  commonMistakes?: string[];
+  operationalChecklist?: string[];
+  troubleshootingSteps?: string[];
+  bestPractices?: string[];
+  practicalMission?: string;
+  pocketSummary?: string;
   alert?: string;
 };
 
 
 
 const moduleSlugById: Record<string, string> = { m1: 'redes-de-computadores', m2: 'fundamentos-rede-isp', m3: 'dns', m4: 'nat', m5: 'cgnat', m6: 'ospf', m7: 'bgp', m8: 'mpls', m9: 'monitoramento-isp' };
+const defaultPrereqs = ['Noções básicas de terminal', 'Acesso a equipamento de borda/lab', 'Conhecimento de endereçamento IP'];
+
+const buildDeepSections = (seed: Seed) => {
+  const prerequisites = (seed.prerequisites ?? defaultPrereqs).join('\n- ');
+  const technicalTerms = (seed.technicalTerms ?? seed.glossaryTerms).join(', ');
+  const commonMistakes = (seed.commonMistakes ?? [
+    'Pular validação de camada física antes de alterar configuração lógica.',
+    'Executar mudanças sem registrar horário, impacto e evidências.',
+  ]).join('\n- ');
+  const operationalChecklist = (seed.operationalChecklist ?? seed.checklist).join('\n- ');
+  const troubleshootingSteps = (seed.troubleshootingSteps ?? [
+    'Isolar sintoma (cliente único, CTO, POP ou rede inteira).',
+    'Coletar comando de estado e comando de teste ativo.',
+    'Comparar baseline do NOC e abrir escalonamento com evidências.',
+  ]).join('\n- ');
+  const bestPractices = (seed.bestPractices ?? [
+    'Padronizar nomenclatura e versionamento de mudanças.',
+    'Usar NTP/UTC e manter trilha de auditoria.',
+    'Executar validação pós-mudança com rollback documentado.',
+  ]).join('\n- ');
+
+  return [
+    { title: 'Objetivo da aula', type: 'paragraph', content: seed.objective ?? seed.mission },
+    { title: 'Pré-requisitos', type: 'paragraph', content: `- ${prerequisites}` },
+    { title: 'Cenário de abertura', type: 'paragraph', content: seed.openingScenario ?? `Durante um plantão de NOC, o cenário desta aula aparece em incidentes reais de ISP brasileiro.` },
+    { title: 'Por que isso importa?', type: 'paragraph', content: seed.why },
+    { title: 'Explicação simples', type: 'paragraph', content: seed.simple },
+    { title: 'Explicação técnica', type: 'paragraph', content: seed.technical },
+    { title: 'Termos técnicos da aula', type: 'paragraph', content: technicalTerms },
+    { title: 'Exemplo real de ISP', type: 'paragraph', content: seed.example },
+    { title: 'Erros comuns', type: 'paragraph', content: `- ${commonMistakes}` },
+    { title: 'Checklist operacional', type: 'paragraph', content: `- ${operationalChecklist}` },
+    { title: 'Passo a passo de troubleshooting', type: 'paragraph', content: `1) ${troubleshootingSteps.replace('\n- ', '\n2) ')}` },
+    { title: 'Boas práticas', type: 'paragraph', content: `- ${bestPractices}` },
+    { title: 'Missão prática', type: 'paragraph', content: seed.practicalMission ?? seed.mission },
+    { title: 'Resumo de bolso', type: 'paragraph', content: seed.pocketSummary ?? `Resumo rápido: ${seed.simple} Na operação: ${seed.technical}` },
+  ];
+};
+
+const moduleDeepening: Record<string, string> = {
+  m1: 'Aprofunde OSI/TCP-IP, IPv4/IPv6, gateway, máscara, ARP, DHCP, TCP/UDP/ICMP, MTU, MSS, latência, perda, jitter, ping, traceroute e MTR com evidências por camada.',
+  m2: 'Cubra ONU, OLT, CTO, PON, VLAN, QinQ, BNG/BRAS, PPPoE, IPoE, RADIUS/AAA, core, borda, trânsito, IX.br e CDN/cache em contexto de POP brasileiro.',
+  m3: 'Diferencie DNS recursivo e autoritativo, cache/TTL, A/AAAA/CNAME/MX/NS/TXT/PTR, reverso, DNSSEC, open resolver e testes dig/nslookup (53 TCP/UDP).',
+  m4: 'Detalhe srcnat, dstnat, masquerade, netmap, conntrack, hairpin NAT, port forwarding, NAT x firewall e testes externos vs internos com MikroTik.',
+  m5: 'Inclua NAT444, 100.64.0.0/10, BPA, CGN determinístico, logs com NTP/timezone e correlação IP+porta+horário, além de impactos em jogos/câmeras e IPv6.',
+  m6: 'Aprofunde LSDB, LSA, SPF, timers hello/dead, estados de vizinhança, área 0, ABR, DR/BDR, stub/NSSA, router-id/loopback e custo para underlay de BGP/MPLS.',
+  m7: 'Inclua AS/ASN, NLRI, eBGP/iBGP, next-hop, local-pref, AS_PATH, MED, communities, RR, prefix-list, max-prefix, RPKI/ROA/ROV, IRR, IX.br e TCP 179.',
+  m8: 'Expandir label switching, LER/LSR, PE/P/CE, LSP, LDP, PHP, MPLS MTU, VRF/RD/RT, MP-BGP, L2VPN/L3VPN e pseudowire com cenário matriz-filial.',
+  m9: 'Detalhar SNMP/OIDs, Zabbix, Grafana, LibreNMS, SmokePing, NetFlow/IPFIX, Syslog e monitoração de BGP/OSPF/OLT/ONU/PON com pós-incidente.',
+};
+
 
 const pseudoCommands = new Set([
   'show dashboard slis',
@@ -116,15 +177,8 @@ const makeLesson = (seed: Seed): Lesson => ({
   estimatedMinutes: seed.minutes,
   progress: 0,
   sections: [
-    { title: 'Por que isso importa?', type: 'paragraph', content: seed.why },
-    { title: 'Explicação simples', type: 'paragraph', content: seed.simple },
-    { title: 'Explicação técnica', type: 'paragraph', content: seed.technical },
-    { title: 'Exemplo real de ISP', type: 'paragraph', content: seed.example },
-    {
-      title: 'Resumo de bolso',
-      type: 'paragraph',
-      content: `Resumo rápido: ${seed.simple} Na operação: ${seed.technical}`,
-    },
+    ...buildDeepSections(seed),
+    { title: 'Aprofundamento do módulo', type: 'info', variant: 'info', content: moduleDeepening[seed.moduleId] },
     ...(seed.alert ? [{ title: 'Alerta operacional', type: 'alert', variant: 'alert' as const, content: seed.alert }] : []),
   ],
   diagram: seed.diagram,
