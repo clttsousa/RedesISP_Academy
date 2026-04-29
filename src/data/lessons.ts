@@ -98,8 +98,8 @@ const pseudoCommands = new Set([
 ]);
 
 const detectVendor = (command: string): CommandVendor => {
-  if (pseudoCommands.has(command)) return 'Conceitual / pseudocomando';
-  if (command.startsWith('/')) return 'MikroTik RouterOS';
+  if (pseudoCommands.has(command)) return 'conceitual';
+  if (command.startsWith('/')) return 'MikroTik';
   if (command.startsWith('show ')) return 'Cisco-like';
   if (command.includes('vtysh') || command.startsWith('dig') || command.startsWith('nslookup') || command.startsWith('ping ') || command.startsWith('mtr ') || command.startsWith('ip ') || command.startsWith('tracepath') || command.startsWith('traceroute') || command.startsWith('tcpdump') || command.startsWith('snmpwalk') || command.startsWith('journalctl') || command.startsWith('nfdump') || command.startsWith('named-checkzone') || command.startsWith('rndc') || command.startsWith('conntrack') || command.startsWith('nft ') || command.startsWith('zgrep') || command.startsWith('nmap')) return 'Linux';
   if (command.startsWith('delv') || command.startsWith('show route') || command.startsWith('show bgp') || command.startsWith('show rpki') || command.startsWith('show ldp')) return 'Juniper-like';
@@ -112,6 +112,7 @@ const toCommandItem = (command: string, moduleSlug: string, lessonSlug: string):
   vendor: detectVendor(command),
   moduleSlug,
   lessonSlug,
+  type: pseudoCommands.has(command) ? 'pseudo' : 'real',
   explanation: pseudoCommands.has(command)
     ? 'Pseudocomando didático para ilustrar um procedimento operacional; adapte para a ferramenta real do seu ambiente.'
     : 'Comando operacional para validação e troubleshooting no contexto da aula.',

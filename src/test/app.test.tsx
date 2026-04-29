@@ -40,7 +40,7 @@ describe('pages', () => {
 
   it('botão copiar comando', () => {
     Object.assign(navigator, { clipboard: { writeText: vi.fn() } });
-    render(<CommandBlock commands={[{ title: 'Resumo BGP', command: 'show ip bgp summary', vendor: 'Cisco-like', moduleSlug: 'bgp', explanation: 'Teste', isPseudoCommand: false }]} />);
+    render(<CommandBlock commands={[{ title: 'Resumo BGP', command: 'show ip bgp summary', vendor: 'Cisco-like', moduleSlug: 'bgp', explanation: 'Teste', type: 'real', isPseudoCommand: false }]} />);
     fireEvent.click(screen.getByText('Copiar'));
     expect(screen.getByText('Copiar')).toBeInTheDocument();
   });
