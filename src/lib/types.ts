@@ -61,12 +61,14 @@ export type LessonQuickQuestion = {
   difficulty: 'facil' | 'medio' | 'dificil';
 };
 
-export type CommandVendor = 'MikroTik RouterOS' | 'Linux' | 'Cisco-like' | 'Juniper-like' | 'Conceitual / pseudocomando';
+export type CommandVendor = 'MikroTik' | 'Linux' | 'Cisco-like' | 'Juniper-like' | 'conceitual';
+export type CommandType = 'real' | 'pseudo';
 
 export type CommandItem = {
   title: string;
   command: string;
   vendor: CommandVendor;
+  type: CommandType;
   moduleSlug: string;
   lessonSlug?: string;
   explanation: string;
