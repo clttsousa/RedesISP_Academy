@@ -61,11 +61,23 @@ export type LessonQuickQuestion = {
   difficulty: 'facil' | 'medio' | 'dificil';
 };
 
+export type CommandVendor = 'MikroTik RouterOS' | 'Linux' | 'Cisco-like' | 'Juniper-like' | 'Conceitual / pseudocomando';
+
+export type CommandItem = {
+  title: string;
+  command: string;
+  vendor: CommandVendor;
+  moduleSlug: string;
+  lessonSlug?: string;
+  explanation: string;
+  isPseudoCommand: boolean;
+};
+
 export type LessonMission = {
   title: string;
   objective: string;
   steps: string[];
-  suggestedCommands: string[];
+  suggestedCommands: CommandItem[];
   checklist: string[];
   expectedResult: string;
 };
@@ -80,7 +92,7 @@ export type Lesson = {
   progress: number;
   sections: LessonSection[];
   diagram: string;
-  commands: string[];
+  commands: CommandItem[];
   checklist: string[];
   mission: LessonMission;
   quickQuestion: LessonQuickQuestion;

@@ -1,4 +1,4 @@
-import { Lesson } from '@/lib/types';
+import { CommandItem, CommandVendor, Lesson } from '@/lib/types';
 import { quizzes } from './quizzes';
 
 type QuestionDifficulty = 'facil' | 'medio' | 'dificil';
@@ -24,6 +24,38 @@ type Seed = {
   alert?: string;
 };
 
+
+
+const moduleSlugById: Record<string, string> = { m1: 'redes-de-computadores', m2: 'fundamentos-rede-isp', m3: 'dns', m4: 'nat', m5: 'cgnat', m6: 'ospf', m7: 'bgp', m8: 'mpls', m9: 'monitoramento-isp' };
+
+const pseudoCommands = new Set([
+  'show dashboard slis',
+  'run incident-drill P1',
+  'show oncall schedule',
+  'ping mpls size-test df-bit',
+  'traceroute mpls-aware',
+]);
+
+const detectVendor = (command: string): CommandVendor => {
+  if (pseudoCommands.has(command)) return 'Conceitual / pseudocomando';
+  if (command.startsWith('/')) return 'MikroTik RouterOS';
+  if (command.startsWith('show ')) return 'Cisco-like';
+  if (command.includes('vtysh') || command.startsWith('dig') || command.startsWith('nslookup') || command.startsWith('ping ') || command.startsWith('mtr ') || command.startsWith('ip ') || command.startsWith('tracepath') || command.startsWith('traceroute') || command.startsWith('tcpdump') || command.startsWith('snmpwalk') || command.startsWith('journalctl') || command.startsWith('nfdump') || command.startsWith('named-checkzone') || command.startsWith('rndc') || command.startsWith('conntrack') || command.startsWith('nft ') || command.startsWith('zgrep') || command.startsWith('nmap')) return 'Linux';
+  if (command.startsWith('delv') || command.startsWith('show route') || command.startsWith('show bgp') || command.startsWith('show rpki') || command.startsWith('show ldp')) return 'Juniper-like';
+  return 'Linux';
+};
+
+const toCommandItem = (command: string, moduleSlug: string, lessonSlug: string): CommandItem => ({
+  title: `Comando: ${command.split(' ')[0]}`,
+  command,
+  vendor: detectVendor(command),
+  moduleSlug,
+  lessonSlug,
+  explanation: pseudoCommands.has(command)
+    ? 'Pseudocomando didático para ilustrar um procedimento operacional; adapte para a ferramenta real do seu ambiente.'
+    : 'Comando operacional para validação e troubleshooting no contexto da aula.',
+  isPseudoCommand: pseudoCommands.has(command),
+});
 const levelToDifficulty: Record<string, QuestionDifficulty> = {
   fácil: 'facil',
   intermediário: 'medio',
@@ -70,7 +102,7 @@ const buildMission = (seed: Seed) => ({
     'Registrar evidências objetivas (saída, horário e impacto).',
     'Consolidar conclusão e próximos passos operacionais.',
   ],
-  suggestedCommands: seed.commands,
+  suggestedCommands: seed.commands.map((command) => toCommandItem(command, moduleSlugById[seed.moduleId] ?? seed.moduleId, seed.slug)),
   checklist: seed.checklist,
   expectedResult: 'Checklist validado, evidências registradas e conclusão pronta para handoff técnico.',
 });
@@ -96,7 +128,7 @@ const makeLesson = (seed: Seed): Lesson => ({
     ...(seed.alert ? [{ title: 'Alerta operacional', type: 'alert', variant: 'alert' as const, content: seed.alert }] : []),
   ],
   diagram: seed.diagram,
-  commands: seed.commands,
+  commands: seed.commands.map((command) => toCommandItem(command, moduleSlugById[seed.moduleId] ?? seed.moduleId, seed.slug)),
   checklist: seed.checklist,
   mission: buildMission(seed),
   quickQuestion: {
