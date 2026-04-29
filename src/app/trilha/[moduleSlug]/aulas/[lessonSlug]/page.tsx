@@ -26,7 +26,7 @@ export default async function LessonPage({ params }: { params: Promise<{ moduleS
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <section className="space-y-5">
           <LessonHeader moduleSlug={moduleSlug} lesson={lesson} module={moduleItem} prev={previousLessonSlug} next={nextLessonSlug} />
-          <LessonTabs lesson={lesson} />
+          <LessonTabs lesson={lesson} moduleSlug={moduleSlug} />
         </section>
         <aside className="space-y-4">
           <Card variant="summary">

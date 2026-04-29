@@ -5,6 +5,7 @@ import { BookOpen, CheckSquare, FlaskConical, GraduationCap } from 'lucide-react
 import { modules } from '@/data/modules';
 import { ReactNode } from 'react';
 import { ModuleLessonsPanel } from '@/components/course/ModuleLessonsPanel';
+import { NetworkDiagram } from '@/components/lesson/NetworkDiagram';
 
 export default async function ModulePage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const { moduleSlug } = await params;
@@ -27,6 +28,12 @@ export default async function ModulePage({ params }: { params: Promise<{ moduleS
           </header>
 
           <ModuleLessonsPanel module={moduleData} />
+
+
+
+          <section className="rounded-2xl border bg-white p-5">
+            <NetworkDiagram moduleSlug={moduleData.slug} className="border-0 p-0" />
+          </section>
 
           <section className="rounded-2xl border bg-white p-5">
             <div className="mt-1 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
