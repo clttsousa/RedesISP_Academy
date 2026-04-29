@@ -23,7 +23,7 @@ const tabItems = [
   { value: 'quiz', label: 'Quiz', icon: GraduationCap },
 ] as const;
 
-export function LessonTabs({ lesson }: { lesson: Lesson }) {
+export function LessonTabs({ lesson, moduleSlug }: { lesson: Lesson; moduleSlug: string }) {
   const [activeTab, setActiveTab] = useState<(typeof tabItems)[number]['value']>('conteudo');
   const shouldReduceMotion = useReducedMotion();
   const tabTransition = shouldReduceMotion ? { duration: 0 } : { duration: 0.25, ease: 'easeOut' };
@@ -71,7 +71,7 @@ export function LessonTabs({ lesson }: { lesson: Lesson }) {
           )}
           <InteractiveChecklist items={lesson.checklist} />
           <h3 className="text-xl font-semibold">Diagrama</h3>
-          <NetworkDiagram />
+          <NetworkDiagram moduleSlug={moduleSlug} diagramId={lesson.diagram} />
           <h3 className="text-xl font-semibold">Comandos úteis</h3>
           <CommandBlock commands={lesson.commands} />
           <MissionCard lessonSlug={lesson.slug} mission={lesson.mission} />
@@ -85,7 +85,7 @@ export function LessonTabs({ lesson }: { lesson: Lesson }) {
       </Tabs.Content>
       <Tabs.Content value="diagrama">
         <motion.div key="diagrama" initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={tabTransition}>
-          <NetworkDiagram />
+          <NetworkDiagram moduleSlug={moduleSlug} diagramId={lesson.diagram} />
         </motion.div>
       </Tabs.Content>
       <Tabs.Content value="exemplo">

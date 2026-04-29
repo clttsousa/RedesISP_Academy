@@ -16,6 +16,41 @@ export type Module = {
   officialSources: string[];
 };
 
+
+export type DiagramLayer = 'acesso' | 'core' | 'borda' | 'internet' | 'servicos';
+
+export type NetworkDiagramNode = {
+  id: string;
+  label: string;
+  layer: DiagramLayer;
+  icon?: 'monitor' | 'router' | 'server' | 'network' | 'shield' | 'globe' | 'database' | 'activity' | 'waypoints';
+  col?: number;
+  row?: number;
+  hint?: string;
+};
+
+export type NetworkDiagramEdge = {
+  from: string;
+  to: string;
+  label?: string;
+  kind?: 'solid' | 'dashed';
+};
+
+export type NetworkDiagramLegendItem = {
+  layer: DiagramLayer;
+  label: string;
+};
+
+export type NetworkDiagramDefinition = {
+  id: string;
+  title: string;
+  description: string;
+  moduleSlug: string;
+  nodes: NetworkDiagramNode[];
+  edges: NetworkDiagramEdge[];
+  legend: NetworkDiagramLegendItem[];
+};
+
 export type LessonSection = { title: string; type: string; content: string; variant?: 'info' | 'alert' | 'default' };
 
 export type LessonQuickQuestion = {
