@@ -87,8 +87,9 @@ export function MissionCard({ lessonSlug, mission }: MissionCardProps) {
                 <p className="font-semibold text-slate-900">Comandos sugeridos</p>
                 <ul className="ml-5 list-disc space-y-1">
                   {mission.suggestedCommands.map((command) => (
-                    <li key={command}>
-                      <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">{command}</code>
+                    <li key={`${command.lessonSlug ?? command.moduleSlug}-${command.command}`}>
+                      <span className="mr-2 text-[11px] font-semibold text-slate-500">{command.vendor}</span>
+                      <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">{command.command}</code>
                     </li>
                   ))}
                 </ul>
