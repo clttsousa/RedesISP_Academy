@@ -1,4 +1,7 @@
 import { Lesson } from '@/lib/types';
+import { quizzes } from './quizzes';
+
+type QuestionDifficulty = 'facil' | 'medio' | 'dificil';
 
 type Seed = {
   id: string;
@@ -21,12 +24,42 @@ type Seed = {
   alert?: string;
 };
 
-const buildQuestionOptions = (question: string) => [
-  `Validar tecnicamente o conceito central: ${question}`,
-  'Aplicar mudança em produção antes de confirmar hipótese',
-  'Escalar sem dados de teste e sem horário de evidência',
-  'Concluir diagnóstico apenas por impressão do usuário',
-];
+const levelToDifficulty: Record<string, QuestionDifficulty> = {
+  fácil: 'facil',
+  intermediário: 'medio',
+  avançado: 'dificil',
+};
+
+const quickQuestionBank: Record<string, { options: string[]; correctAnswer: string; explanation: string; difficulty: QuestionDifficulty }> = Object.fromEntries(
+  quizzes
+    .map((quiz) => {
+      const [, moduleKey, order] = quiz.id.split('-');
+      const lessonModule: Record<string, string> = {
+        redes: 'm1',
+        isp: 'm2',
+        dns: 'm3',
+        nat: 'm4',
+        cgnat: 'm5',
+        ospf: 'm6',
+        bgp: 'm7',
+        mpls: 'm8',
+        moni: 'm9',
+      };
+      const moduleId = lessonModule[moduleKey];
+      if (!moduleId) return null;
+      const lessonId = `l${moduleId.slice(1)}-${order}`;
+      return [
+        lessonId,
+        {
+          options: quiz.options,
+          correctAnswer: quiz.correctAnswer,
+          explanation: quiz.explanation,
+          difficulty: levelToDifficulty[quiz.level] ?? 'medio',
+        },
+      ] as const;
+    })
+    .filter((entry): entry is readonly [string, { options: string[]; correctAnswer: string; explanation: string; difficulty: QuestionDifficulty }] => entry !== null),
+);
 
 const buildMission = (seed: Seed) => ({
   title: `Missão prática — ${seed.title}`,
@@ -68,9 +101,10 @@ const makeLesson = (seed: Seed): Lesson => ({
   mission: buildMission(seed),
   quickQuestion: {
     question: seed.quickQuestion,
-    options: buildQuestionOptions(seed.quickQuestion),
-    correctAnswer: `Validar tecnicamente o conceito central: ${seed.quickQuestion}`,
-    explanation: 'A abordagem correta começa por validação técnica objetiva antes de qualquer mudança ou escalonamento.',
+    options: quickQuestionBank[seed.id]?.options ?? ['N/A'],
+    correctAnswer: quickQuestionBank[seed.id]?.correctAnswer ?? 'N/A',
+    explanation: quickQuestionBank[seed.id]?.explanation ?? 'N/A',
+    difficulty: quickQuestionBank[seed.id]?.difficulty ?? 'medio',
   },
   glossaryTerms: seed.glossaryTerms,
   sources: seed.sources,

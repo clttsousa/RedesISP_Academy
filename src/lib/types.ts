@@ -58,6 +58,7 @@ export type LessonQuickQuestion = {
   options: string[];
   correctAnswer: string;
   explanation: string;
+  difficulty: 'facil' | 'medio' | 'dificil';
 };
 
 export type LessonMission = {
